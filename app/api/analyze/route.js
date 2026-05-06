@@ -27,12 +27,16 @@ export async function POST(req) {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return Response.json({ error: "ANTHROPIC_API_KEY missing" }, { status: 500 });
 
-  const { input, isUrl } = await req.json();
+  const { input, isUrl, preferences } = await req.json();
   if (!input) return Response.json({ error: "No input provided" }, { status: 400 });
 
+  const prefsLine = preferences?.length
+    ? `\n\nCandidate preferences: ${preferences.join(", ")}`
+    : "";
+
   const userMsg = isUrl
-    ? `Analyze this job posting URL: ${input}`
-    : `Analyze this job description:\n\n${input}`;
+    ? `Analyze this job posting URL: ${input}${prefsLine}`
+    : `Analyze this job description:\n\n${input}${prefsLine}`;
 
   const tryFetch = async (withSearch) => {
     const body = {

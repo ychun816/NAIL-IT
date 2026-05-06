@@ -160,15 +160,19 @@ const FitMeter = ({ score }) => {
 
 /* ─── Main ────────────────────────────────────── */
 export default function Home() {
-  const [jobs,      setJobs]      = useState([]);
-  const [input,     setInput]     = useState("");
-  const [loading,   setLoading]   = useState(false);
-  const [progress,  setProgress]  = useState({ done:0, total:0 });
-  const [errors,    setErrors]    = useState([]);
-  const [sortBy,    setSortBy]    = useState("category");
-  const [filter,    setFilter]    = useState("all");
-  const [expanded,  setExpanded]  = useState(null);
-  const [ready,     setReady]     = useState(false);
+  const [jobs,       setJobs]       = useState([]);
+  const [pref1,      setPref1]      = useState("");
+  const [pref2,      setPref2]      = useState("");
+  const [pref3,      setPref3]      = useState("");
+  const [jobLink,    setJobLink]    = useState("");
+  const [jobDesc,    setJobDesc]    = useState("");
+  const [lastResult, setLastResult] = useState(null);
+  const [loading,    setLoading]    = useState(false);
+  const [errors,     setErrors]     = useState([]);
+  const [sortBy,     setSortBy]     = useState("category");
+  const [filter,     setFilter]     = useState("all");
+  const [expanded,   setExpanded]   = useState(null);
+  const [ready,      setReady]      = useState(false);
 
   useEffect(() => {
     try { const s = localStorage.getItem(STORAGE); if(s) setJobs(JSON.parse(s)); } catch(_){}
@@ -180,30 +184,29 @@ export default function Home() {
   }, [jobs, ready]);
 
   const handleAnalyze = useCallback(async () => {
-    const entries = parseEntries(input);
-    if(!entries.length) return;
-    setLoading(true); setErrors([]); setProgress({ done:0, total:entries.length });
-    const fresh = [];
-    for(let i=0; i<entries.length; i++) {
-      try {
-        const r = await fetch("/api/analyze", {
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body: JSON.stringify({ input:entries[i], isUrl:isURL(entries[i]) }),
-        });
-        const d = await r.json();
-        if(d.error) throw new Error(d.error);
-        fresh.push({ ...d, id:Date.now()+Math.random(), sourceInput:entries[i], isUrl:isURL(entries[i]),
-          analyzedAt:new Date().toLocaleDateString("fr-FR") });
-      } catch(e) { setErrors(p=>[...p,`#${i+1}: ${e.message}`]); }
-      setProgress({ done:i+1, total:entries.length });
-    }
-    setJobs(prev => {
-      const seen=new Set();
-      return [...fresh,...prev].filter(j=>{ if(seen.has(j.sourceInput)) return false; seen.add(j.sourceInput); return true; });
-    });
-    setLoading(false); setInput("");
-  }, [input]);
+    const src = jobLink.trim() || jobDesc.trim();
+    if (!src) return;
+    const prefs = [pref1, pref2, pref3].filter(Boolean);
+    setLoading(true); setErrors([]);
+    try {
+      const r = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ input: src, isUrl: isURL(src), preferences: prefs }),
+      });
+      const d = await r.json();
+      if (d.error) throw new Error(d.error);
+      const job = { ...d, id: Date.now() + Math.random(), sourceInput: src,
+        isUrl: isURL(src), analyzedAt: new Date().toLocaleDateString("fr-FR") };
+      setJobs(prev => {
+        const seen = new Set();
+        return [job, ...prev].filter(j => { if (seen.has(j.sourceInput)) return false; seen.add(j.sourceInput); return true; });
+      });
+      setLastResult(d);
+      setJobLink(""); setJobDesc("");
+    } catch(e) { setErrors([e.message]); }
+    setLoading(false);
+  }, [pref1, pref2, pref3, jobLink, jobDesc]);
 
   const sorted = [...jobs]
     .filter(j => filter==="all" ? true : filter==="to_apply" ? j.toApply : j.category===filter)
@@ -227,18 +230,14 @@ export default function Home() {
         background:C.black, overflow:"hidden", whiteSpace:"nowrap",
         borderBottom:`2px solid ${C.black}`, position:"relative", zIndex:10,
       }}>
-        <div style={{ display:"inline-flex", animation:"marquee 18s linear infinite" }}>
+        <div style={{ display:"inline-flex", animation:"marquee 40s linear infinite" }}>
           {[...Array(2)].map((_,k) => (
             <span key={k} style={{
               fontFamily:"'Bebas Neue',sans-serif", letterSpacing:4,
               fontSize:13, padding:"7px 0", color:C.cream,
             }}>
-              &nbsp;&nbsp;★&nbsp; JOBMATCH &nbsp;·&nbsp; ALTERNANCE FRANCE &nbsp;·&nbsp;
-              CLOUD &nbsp;·&nbsp; DEVOPS &nbsp;·&nbsp; BACKEND &nbsp;·&nbsp; FULLSTACK &nbsp;·&nbsp;
-              AI ANALYZER &nbsp;·&nbsp; BONNE CHANCE &nbsp;·&nbsp; がんばって &nbsp;·&nbsp;
-              ★&nbsp;&nbsp;JOBMATCH &nbsp;·&nbsp; ALTERNANCE FRANCE &nbsp;·&nbsp;
-              CLOUD &nbsp;·&nbsp; DEVOPS &nbsp;·&nbsp; BACKEND &nbsp;·&nbsp; FULLSTACK &nbsp;·&nbsp;
-              AI ANALYZER &nbsp;·&nbsp; BONNE CHANCE &nbsp;·&nbsp; がんばって &nbsp;·&nbsp;
+              &nbsp;&nbsp;★&nbsp; STAGE &nbsp;·&nbsp; ALTERNANCE &nbsp;·&nbsp;
+              ★&nbsp;&nbsp;STAGE &nbsp;·&nbsp; ALTERNANCE &nbsp;·&nbsp;
             </span>
           ))}
         </div>
@@ -253,23 +252,30 @@ export default function Home() {
             <Star size={28} color={C.yellow} style={{ position:"absolute", top:-8, left:-12, transform:"rotate(15deg)" }} />
             <Star size={18} color={C.pink}   style={{ position:"absolute", top:20, left:220, transform:"rotate(-10deg)" }} />
 
-            <div style={{ fontFamily:"'Space Mono',monospace", fontSize:11, letterSpacing:3, color:C.pink, marginBottom:6, textTransform:"uppercase" }}>
+            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:3, color:C.pink, marginBottom:6, textTransform:"uppercase" }}>
               // Alternance Stage · France 2026
             </div>
-            <h1 style={{
-              fontFamily:"'Bebas Neue',sans-serif",
-              fontSize:"clamp(52px,8vw,88px)",
-              letterSpacing:-1,
-              lineHeight:0.9,
-              color:C.black,
-            }}>
-              JOB<span style={{ WebkitTextStroke:`3px ${C.black}`, color:C.blue }}>MATCH</span>
-              <span style={{
-                display:"block", fontFamily:"'Permanent Marker',cursive",
-                fontSize:"clamp(18px,2.5vw,28px)", color:C.pink, letterSpacing:2,
-                fontWeight:"normal", marginTop:4,
-              }}>alternance analyzer ✦</span>
-            </h1>
+            <div style={{ display:"flex", alignItems:"center", gap:16 }}>
+              <img
+                src="/red-pin.png"
+                alt="nail it pin"
+                style={{ height:"clamp(60px,9vw,100px)", width:"auto", transform:"rotate(-20deg)", flexShrink:0 }}
+              />
+              <h1 style={{
+                fontFamily:"'Stora',sans-serif",
+                fontSize:"clamp(52px,8vw,88px)",
+                letterSpacing:-1,
+                lineHeight:0.9,
+                color:C.black,
+              }}>
+                NAIL<span style={{ WebkitTextStroke:`3px ${C.black}`, color:C.blue }}> IT</span>
+                <span style={{
+                  display:"block", fontFamily:"'Bricolage Grotesque',sans-serif",
+                  fontSize:"clamp(18px,2.5vw,28px)", color:C.pink, letterSpacing:2,
+                  fontWeight:300, marginTop:4,
+                }}>alternance analyzer ✦</span>
+              </h1>
+            </div>
           </div>
 
           {/* stat cards */}
@@ -296,65 +302,98 @@ export default function Home() {
         {/* ── INPUT ─────────────────────────────── */}
         <Panel accent={C.green} style={{ marginBottom:20 }}>
           <PanelHeader bg={C.black} color={C.green}>
-            <span>📡</span> INPUT.EXE — PASTE LINKS OR JD TEXT
+            <span>📡</span> INPUT.EXE
           </PanelHeader>
-          <div style={{ padding:16 }}>
-            <textarea
-              value={input}
-              onChange={e=>setInput(e.target.value)}
-              disabled={loading}
-              rows={6}
-              placeholder={`> Collez ici vos liens ou descriptions de postes...
 
-https://welcometothejungle.com/fr/...
-https://linkedin.com/jobs/view/...
+          {/* preference */}
+          <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
+            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:"#888", flexShrink:0 }}>PREFERENCE</span>
+            {[["1",pref1,setPref1],["2",pref2,setPref2],["3",pref3,setPref3]].map(([n,val,set])=>(
+              <div key={n} style={{ display:"flex", alignItems:"center", gap:6 }}>
+                <span style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:"#aaa" }}>{n}</span>
+                <input
+                  value={val} onChange={e=>set(e.target.value)} disabled={loading}
+                  placeholder="e.g. DevOps"
+                  style={{
+                    fontFamily:"'Space Mono',monospace", fontSize:11, width:110,
+                    background:"transparent", border:`1.5px solid ${C.black}40`,
+                    borderRadius:4, padding:"5px 10px", outline:"none", color:C.black,
+                  }}
+                />
+              </div>
+            ))}
+          </div>
 
---- (séparez plusieurs JDs avec ---)
-
-Titre: Alternance DevOps @ OVHcloud
-Description: Nous recherchons un alternant...`}
+          {/* job link */}
+          <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, display:"flex", alignItems:"center", gap:16 }}>
+            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:"#888", flexShrink:0, width:110 }}>JOB LINK</span>
+            <input
+              value={jobLink} onChange={e=>setJobLink(e.target.value)} disabled={loading}
+              placeholder="https://..."
               style={{
-                width:"100%", resize:"vertical",
-                background:"transparent", border:"none", outline:"none",
-                fontFamily:"'Space Mono',monospace", fontSize:13,
-                color:C.black, lineHeight:1.6,
-                caretColor:C.pink,
+                flex:1, fontFamily:"'Space Mono',monospace", fontSize:12,
+                background:"transparent", border:`1.5px solid ${C.black}40`,
+                borderRadius:4, padding:"6px 12px", outline:"none",
+                color:C.blue, caretColor:C.pink,
               }}
             />
           </div>
-          <div style={{
-            borderTop:`2px solid ${C.black}`, padding:"12px 16px",
-            display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, flexWrap:"wrap",
-            background:`${C.black}08`,
-          }}>
-            <span style={{ fontFamily:"'Space Mono',monospace", fontSize:10, color:"#888" }}>
-              URLs: une par ligne · JDs: séparés par --- · Mix OK
-            </span>
-            <div style={{ display:"flex", gap:10 }}>
-              {jobs.length>0 && (
-                <Btn color={C.pink} small onClick={()=>{ if(confirm("Supprimer tout?")) setJobs([]); }}>✕ Clear</Btn>
+
+          {/* job description */}
+          <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20` }}>
+            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:"#888", marginBottom:8 }}>JOB DESCRIPTION</div>
+            <textarea
+              value={jobDesc} onChange={e=>setJobDesc(e.target.value)} disabled={loading}
+              rows={5}
+              placeholder="> Collez la description du poste ici..."
+              style={{
+                width:"100%", resize:"vertical",
+                background:"transparent", border:`1.5px solid ${C.black}40`,
+                borderRadius:4, padding:"8px 12px", outline:"none",
+                fontFamily:"'Space Mono',monospace", fontSize:12,
+                color:C.black, lineHeight:1.6, caretColor:C.pink,
+              }}
+            />
+          </div>
+
+          {/* analysis compatibility */}
+          <div style={{ padding:"12px 16px", borderBottom:`2px solid ${C.black}` }}>
+            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:"#888", marginBottom:8 }}>ANALYSIS COMPATIBILITY</div>
+            <div style={{
+              minHeight:52, border:`1.5px solid ${C.black}40`, borderRadius:4,
+              padding:"10px 14px", background:`${C.black}05`,
+              fontFamily:"'Space Mono',monospace", fontSize:12, color:C.black, lineHeight:1.6,
+            }}>
+              {loading ? (
+                <span style={{ color:C.green }}>⟳ analyzing...</span>
+              ) : lastResult ? (
+                <div style={{ display:"flex", gap:16, alignItems:"flex-start" }}>
+                  <div style={{ flexShrink:0 }}>
+                    <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:30, lineHeight:1, color:fitColor(lastResult.fitScore||0) }}>{lastResult.fitScore}</span>
+                    <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:"#aaa" }}>/100</span>
+                  </div>
+                  <div style={{ fontSize:11, color:"#555", lineHeight:1.7 }}>{lastResult.fitReason}</div>
+                </div>
+              ) : (
+                <span style={{ color:"#bbb" }}>— awaiting analysis —</span>
               )}
-              <Btn onClick={handleAnalyze} disabled={loading||!input.trim()}>
-                {loading ? `⟳ ${progress.done}/${progress.total}` : "▶ Analyser"}
-              </Btn>
             </div>
           </div>
 
-          {/* progress */}
+          {/* actions */}
+          <div style={{ padding:"12px 16px", display:"flex", alignItems:"center", justifyContent:"flex-end", gap:10, background:`${C.black}08` }}>
+            {jobs.length>0 && (
+              <Btn color={C.pink} small onClick={()=>{ if(confirm("Supprimer tout?")) setJobs([]); }}>✕ Clear</Btn>
+            )}
+            <Btn onClick={handleAnalyze} disabled={loading||(!jobLink.trim()&&!jobDesc.trim())}>
+              {loading ? "⟳ Analyzing..." : "▶ Analyser"}
+            </Btn>
+          </div>
+
           {loading && (
-            <div style={{ padding:"10px 16px", borderTop:`2px solid ${C.black}`, background:`${C.green}18` }}>
-              <div style={{
-                height:8, background:"#ddd", border:`1.5px solid ${C.black}`,
-                borderRadius:4, overflow:"hidden",
-              }}>
-                <div style={{
-                  height:"100%", background:C.green,
-                  width:`${(progress.done/progress.total)*100}%`,
-                  borderRadius:3, transition:"width .3s",
-                }} />
-              </div>
-              <div style={{ fontFamily:"'Space Mono',monospace", fontSize:10, color:C.black, marginTop:6, letterSpacing:1 }}>
-                ◈ PROCESSING {progress.done} / {progress.total}...
+            <div style={{ padding:"8px 16px", borderTop:`2px solid ${C.black}`, background:`${C.green}18` }}>
+              <div style={{ height:6, background:"#ddd", border:`1.5px solid ${C.black}`, borderRadius:4, overflow:"hidden" }}>
+                <div style={{ height:"100%", background:C.green, width:"60%", borderRadius:3, animation:"marquee 1.2s linear infinite" }} />
               </div>
             </div>
           )}
@@ -577,7 +616,7 @@ Description: Nous recherchons un alternant...`}
           display:"flex", alignItems:"center", justifyContent:"center", gap:12,
         }}>
           <Star size={14} color={C.yellow} />
-          JOBMATCH · POWERED BY CLAUDE AI · ALTERNANCE 2026
+          NAIL IT · POWERED BY CLAUDE AI · ALTERNANCE 2026
           <Star size={14} color={C.pink} />
         </div>
       </div>

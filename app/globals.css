@@ -1,3 +1,13 @@
+@font-face {
+  font-family: 'Stora';
+  src: url('/fonts/Stora.ttf') format('truetype'),
+       url('/fonts/Stora.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
