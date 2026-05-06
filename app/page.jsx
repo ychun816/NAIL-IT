@@ -79,7 +79,7 @@ const PanelHeader = ({ children, bg=C.black, color=C.cream }) => (
   <div style={{
     background: bg,
     color,
-    fontFamily:"'Bebas Neue',sans-serif",
+    fontFamily:"'Stora',sans-serif",
     fontSize: 15,
     letterSpacing: 3,
     padding: "8px 16px",
@@ -117,7 +117,7 @@ const Tag = ({ children, color=C.black, bg=C.yellow, onClick, style={} }) => (
 /* ─── GlossButton ─────────────────────────────── */
 const Btn = ({ children, onClick, disabled, color=C.green, small=false }) => (
   <button onClick={onClick} disabled={disabled} style={{
-    fontFamily:"'Bebas Neue',sans-serif",
+    fontFamily:"'Stora',sans-serif",
     fontSize: small ? 13 : 15,
     letterSpacing:3,
     padding: small ? "7px 16px" : "10px 24px",
@@ -230,7 +230,7 @@ export default function Home() {
         background:C.black, overflow:"hidden", whiteSpace:"nowrap",
         borderBottom:`2px solid ${C.black}`, position:"relative", zIndex:10,
       }}>
-        <div style={{ display:"inline-flex", animation:"marquee 40s linear infinite" }}>
+        <div style={{ display:"inline-flex", animation:"marquee 10s linear infinite" }}>
           {[...Array(2)].map((_,k) => (
             <span key={k} style={{
               fontFamily:"'Bebas Neue',sans-serif", letterSpacing:4,
@@ -307,7 +307,7 @@ export default function Home() {
 
           {/* preference */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
-            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:"#888", flexShrink:0 }}>PREFERENCE</span>
+            <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", flexShrink:0 }}>PREFERENCE</span>
             {[["1",pref1,setPref1],["2",pref2,setPref2],["3",pref3,setPref3]].map(([n,val,set])=>(
               <div key={n} style={{ display:"flex", alignItems:"center", gap:6 }}>
                 <span style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:"#aaa" }}>{n}</span>
@@ -326,7 +326,7 @@ export default function Home() {
 
           {/* job link */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, display:"flex", alignItems:"center", gap:16 }}>
-            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:"#888", flexShrink:0, width:110 }}>JOB LINK</span>
+            <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", flexShrink:0, width:110 }}>JOB LINK</span>
             <input
               value={jobLink} onChange={e=>setJobLink(e.target.value)} disabled={loading}
               placeholder="https://..."
@@ -341,7 +341,7 @@ export default function Home() {
 
           {/* job description */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20` }}>
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:"#888", marginBottom:8 }}>JOB DESCRIPTION</div>
+            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", marginBottom:8 }}>JOB DESCRIPTION</div>
             <textarea
               value={jobDesc} onChange={e=>setJobDesc(e.target.value)} disabled={loading}
               rows={5}
@@ -358,7 +358,7 @@ export default function Home() {
 
           {/* analysis compatibility */}
           <div style={{ padding:"12px 16px", borderBottom:`2px solid ${C.black}` }}>
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:"#888", marginBottom:8 }}>ANALYSIS COMPATIBILITY</div>
+            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", marginBottom:8 }}>ANALYSIS COMPATIBILITY</div>
             <div style={{
               minHeight:52, border:`1.5px solid ${C.black}40`, borderRadius:4,
               padding:"10px 14px", background:`${C.black}05`,
