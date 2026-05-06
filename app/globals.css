@@ -11,22 +11,24 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --cream:   #F2EBD9;
-  --black:   #1A1A18;
+  --cream:   #E8DFC8;
+  --black:   #0D0B08;
+  --paper:   #181410;
+  --border:  #2E2820;
   --blue:    #5BC8F5;
   --pink:    #FF6B9D;
   --green:   #BAFF29;
   --yellow:  #FFE135;
   --purple:  #C084FC;
   --red:     #FF3B3B;
-  --ink:     rgba(26,26,24,0.08);
+  --ink:     rgba(232,223,200,0.04);
 }
 
 html, body { height: 100%; }
 
 body {
-  background-color: var(--cream);
-  color: var(--black);
+  background-color: var(--black);
+  color: var(--cream);
   font-family: 'Space Mono', monospace;
   overflow-x: hidden;
 }

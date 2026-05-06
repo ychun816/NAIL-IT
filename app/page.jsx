@@ -3,8 +3,10 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 /* ─── palette ─────────────────────────────────── */
 const C = {
-  cream:  "#F2EBD9",
-  black:  "#1A1A18",
+  cream:  "#E8DFC8",
+  black:  "#0D0B08",
+  paper:  "#181410",
+  border: "#2E2820",
   blue:   "#5BC8F5",
   pink:   "#FF6B9D",
   green:  "#BAFF29",
@@ -59,10 +61,10 @@ const Blob = ({ color, style={} }) => (
 );
 
 /* ─── Panel (cut-paper card) ──────────────────── */
-const Panel = ({ children, accent=C.black, style={} }) => (
+const Panel = ({ children, accent=C.cream, style={} }) => (
   <div style={{
-    background: C.cream,
-    border: `2.5px solid ${C.black}`,
+    background: C.paper,
+    border: `2px solid ${C.border}`,
     borderRadius: 8,
     boxShadow: `4px 4px 0 ${accent}`,
     overflow:"hidden",
@@ -83,7 +85,7 @@ const PanelHeader = ({ children, bg=C.black, color=C.cream }) => (
     fontSize: 15,
     letterSpacing: 3,
     padding: "8px 16px",
-    borderBottom: `2px solid ${C.black}`,
+    borderBottom: `2px solid ${C.border}`,
     display:"flex",
     alignItems:"center",
     gap:8,
@@ -266,7 +268,7 @@ export default function Home() {
                 fontSize:"clamp(52px,8vw,88px)",
                 letterSpacing:-1,
                 lineHeight:0.9,
-                color:C.black,
+                color:C.cream,
               }}>
                 NAIL<span style={{ WebkitTextStroke:`3px ${C.black}`, color:C.blue }}> IT</span>
                 <span style={{
@@ -307,7 +309,7 @@ export default function Home() {
 
           {/* preference */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
-            <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", flexShrink:0 }}>PREFERENCE</span>
+            <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", flexShrink:0, fontWeight:700 }}>PREFERENCE</span>
             {[["1",pref1,setPref1],["2",pref2,setPref2],["3",pref3,setPref3]].map(([n,val,set])=>(
               <div key={n} style={{ display:"flex", alignItems:"center", gap:6 }}>
                 <span style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:"#aaa" }}>{n}</span>
@@ -326,7 +328,7 @@ export default function Home() {
 
           {/* job link */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, display:"flex", alignItems:"center", gap:16 }}>
-            <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", flexShrink:0, width:110 }}>JOB LINK</span>
+            <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", flexShrink:0, width:110, fontWeight:700 }}>JOB LINK</span>
             <input
               value={jobLink} onChange={e=>setJobLink(e.target.value)} disabled={loading}
               placeholder="https://..."
@@ -341,7 +343,7 @@ export default function Home() {
 
           {/* job description */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20` }}>
-            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", marginBottom:8 }}>JOB DESCRIPTION</div>
+            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", marginBottom:8, fontWeight:700 }}>JOB DESCRIPTION</div>
             <textarea
               value={jobDesc} onChange={e=>setJobDesc(e.target.value)} disabled={loading}
               rows={5}
@@ -358,7 +360,7 @@ export default function Home() {
 
           {/* analysis compatibility */}
           <div style={{ padding:"12px 16px", borderBottom:`2px solid ${C.black}` }}>
-            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", marginBottom:8 }}>ANALYSIS COMPATIBILITY</div>
+            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", marginBottom:8, fontWeight:700 }}>ANALYSIS COMPATIBILITY</div>
             <div style={{
               minHeight:52, border:`1.5px solid ${C.black}40`, borderRadius:4,
               padding:"10px 14px", background:`${C.black}05`,
@@ -418,13 +420,13 @@ export default function Home() {
               { key:"to_apply", label:"★ TO APPLY",   bg:C.green },
               ...CAT_ORDER.map(c=>({ key:c, label:CAT_META[c].label, bg:CAT_META[c].color })),
             ].map(({ key, label, bg }) => (
-              <Tag key={key} onClick={()=>setFilter(key)} bg={filter===key?bg:C.cream}
-                color={C.black} style={{ opacity: filter===key?1:0.55 }}>{label}</Tag>
+              <Tag key={key} onClick={()=>setFilter(key)} bg={filter===key?bg:C.paper}
+                color={filter===key?C.black:C.cream} style={{ opacity: filter===key?1:0.55 }}>{label}</Tag>
             ))}
             <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:"#888", marginLeft:8 }}>SORT</span>
             {[{key:"category",label:"PRIORITÉ"},{key:"fit",label:"FIT ↓"}].map(({ key, label })=>(
-              <Tag key={key} onClick={()=>setSortBy(key)} bg={sortBy===key?C.yellow:C.cream}
-                color={C.black} style={{ opacity:sortBy===key?1:0.55 }}>{label}</Tag>
+              <Tag key={key} onClick={()=>setSortBy(key)} bg={sortBy===key?C.yellow:C.paper}
+                color={sortBy===key?C.black:C.cream} style={{ opacity:sortBy===key?1:0.55 }}>{label}</Tag>
             ))}
           </div>
         )}
@@ -432,7 +434,7 @@ export default function Home() {
         {/* ── TABLE ─────────────────────────────── */}
         <Panel accent={C.blue}>
           <PanelHeader bg={C.blue} color={C.black}>
-            📊 RESULTS.DB — {sorted.length} ENTRÉES
+            📊 OFFERS TO APPLY — {sorted.length}
             <Star size={16} color={C.black} style={{ marginLeft:"auto" }} />
           </PanelHeader>
 
@@ -466,7 +468,7 @@ export default function Home() {
                   {sorted.map((job, idx) => {
                     const cat = CAT_META[job.category] || CAT_META.other;
                     const isExp = expanded===job.id;
-                    const rowBg = idx%2===0 ? C.cream : "#F8F2E2";
+                    const rowBg = idx%2===0 ? C.paper : "#1E1914";
                     let host="";
                     if(job.isUrl){ try{ host=new URL(job.sourceInput).hostname.replace("www.",""); }catch(_){host="link";} }
 
@@ -476,7 +478,7 @@ export default function Home() {
                           onClick={()=>setExpanded(isExp?null:job.id)}
                           style={{
                             background: isExp ? `${C.blue}18` : rowBg,
-                            borderBottom:`1.5px solid ${C.black}20`,
+                            borderBottom:`1.5px solid ${C.border}`,
                             cursor:"pointer",
                             transition:"background .12s",
                           }}
@@ -485,7 +487,7 @@ export default function Home() {
                         >
                           {/* title */}
                           <td style={{ padding:"12px 14px", maxWidth:200 }}>
-                            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:15, letterSpacing:1, color:C.black }}>{job.title||"—"}</div>
+                            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:15, letterSpacing:1, color:C.cream }}>{job.title||"—"}</div>
                             {job.company && <div style={{ fontFamily:"'Space Mono',monospace", fontSize:10, color:"#888", marginTop:1 }}>{job.company}</div>}
                             <div style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:"#bbb", marginTop:1 }}>{job.analyzedAt}</div>
                           </td>
@@ -518,10 +520,10 @@ export default function Home() {
                           <td style={{ padding:"12px 14px" }}><FitMeter score={job.fitScore||0} /></td>
 
                           {/* salary */}
-                          <td style={{ padding:"12px 14px", fontFamily:"'Space Mono',monospace", fontSize:11, color:"#555", whiteSpace:"nowrap" }}>{job.salary||"—"}</td>
+                          <td style={{ padding:"12px 14px", fontFamily:"'Space Mono',monospace", fontSize:11, color:"#aaa", whiteSpace:"nowrap" }}>{job.salary||"—"}</td>
 
                           {/* location */}
-                          <td style={{ padding:"12px 14px", fontFamily:"'Space Mono',monospace", fontSize:11, color:"#777", whiteSpace:"nowrap" }}>{job.location||"—"}</td>
+                          <td style={{ padding:"12px 14px", fontFamily:"'Space Mono',monospace", fontSize:11, color:"#aaa", whiteSpace:"nowrap" }}>{job.location||"—"}</td>
 
                           {/* stack */}
                           <td style={{ padding:"12px 14px" }}>
@@ -529,8 +531,8 @@ export default function Home() {
                               {(job.techStack||[]).slice(0,5).map((t,i)=>(
                                 <span key={i} style={{
                                   fontFamily:"'Space Mono',monospace", fontSize:9,
-                                  padding:"2px 6px", border:`1.5px solid ${C.black}30`,
-                                  borderRadius:3, background:`${C.blue}18`, color:C.black,
+                                  padding:"2px 6px", border:`1.5px solid ${C.border}`,
+                                  borderRadius:3, background:`${C.blue}25`, color:C.cream,
                                 }}>{t}</span>
                               ))}
                               {(job.techStack||[]).length>5 && (
@@ -542,7 +544,7 @@ export default function Home() {
                           {/* status */}
                           <td style={{ padding:"12px 14px" }} onClick={e=>e.stopPropagation()}>
                             <Tag
-                              bg={job.toApply?C.green:C.cream}
+                              bg={job.toApply?C.green:C.paper}
                               onClick={()=>setJobs(p=>p.map(j=>j.id===job.id?{...j,toApply:!j.toApply}:j))}
                               style={{ fontSize:9 }}
                             >{job.toApply?"★ TO APPLY":"+ MARK"}</Tag>
@@ -568,18 +570,18 @@ export default function Home() {
                           <tr key={`${job.id}-exp`}>
                             <td colSpan={9} style={{ padding:"0 14px 18px", background:`${C.blue}10` }}>
                               <div style={{
-                                background:C.cream, border:`2px solid ${C.black}20`,
+                                background:C.paper, border:`2px solid ${C.border}`,
                                 borderRadius:6, padding:16,
                                 display:"grid", gridTemplateColumns:"1fr 1fr", gap:20,
                                 animation:"slideUp .2s ease",
                               }}>
                                 <div>
                                   <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:"#aaa", marginBottom:6 }}>▸ RÉSUMÉ DU POSTE</div>
-                                  <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:"#444" }}>{job.intro}</div>
+                                  <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:"#bbb" }}>{job.intro}</div>
                                 </div>
                                 <div>
                                   <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:"#aaa", marginBottom:6 }}>▸ POURQUOI CE SCORE ?</div>
-                                  <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:"#444" }}>{job.fitReason}</div>
+                                  <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:"#bbb" }}>{job.fitReason}</div>
                                 </div>
                                 {job.techStack?.length>0 && (
                                   <div style={{ gridColumn:"1/-1" }}>
@@ -588,8 +590,8 @@ export default function Home() {
                                       {job.techStack.map((t,i)=>(
                                         <span key={i} style={{
                                           fontFamily:"'Space Mono',monospace", fontSize:11,
-                                          padding:"3px 8px", border:`1.5px solid ${C.black}30`,
-                                          borderRadius:3, background:`${C.blue}20`, color:C.black,
+                                          padding:"3px 8px", border:`1.5px solid ${C.border}`,
+                                          borderRadius:3, background:`${C.blue}25`, color:C.cream,
                                         }}>{t}</span>
                                       ))}
                                     </div>
