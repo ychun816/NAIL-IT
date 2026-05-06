@@ -170,6 +170,7 @@ export default function Home() {
   const [jobDesc,    setJobDesc]    = useState("");
   const [lastResult, setLastResult] = useState(null);
   const [loading,    setLoading]    = useState(false);
+  const [progress,   setProgress]   = useState({ done:0, total:0 });
   const [errors,     setErrors]     = useState([]);
   const [sortBy,     setSortBy]     = useState("category");
   const [filter,     setFilter]     = useState("all");
@@ -186,28 +187,34 @@ export default function Home() {
   }, [jobs, ready]);
 
   const handleAnalyze = useCallback(async () => {
-    const src = jobLink.trim() || jobDesc.trim();
-    if (!src) return;
+    const links = jobLink.trim()
+      ? jobLink.trim().split("\n").map(u => u.trim()).filter(Boolean).slice(0, 15)
+      : [];
+    const entries = links.length ? links : jobDesc.trim() ? [jobDesc.trim()] : [];
+    if (!entries.length) return;
     const prefs = [pref1, pref2, pref3].filter(Boolean);
-    setLoading(true); setErrors([]);
-    try {
-      const r = await fetch("/api/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ input: src, isUrl: isURL(src), preferences: prefs }),
-      });
-      const d = await r.json();
-      if (d.error) throw new Error(d.error);
-      const job = { ...d, id: Date.now() + Math.random(), sourceInput: src,
-        isUrl: isURL(src), analyzedAt: new Date().toLocaleDateString("fr-FR") };
-      setJobs(prev => {
-        const seen = new Set();
-        return [job, ...prev].filter(j => { if (seen.has(j.sourceInput)) return false; seen.add(j.sourceInput); return true; });
-      });
-      setLastResult(d);
-      setJobLink(""); setJobDesc("");
-    } catch(e) { setErrors([e.message]); }
-    setLoading(false);
+    setLoading(true); setErrors([]); setProgress({ done:0, total:entries.length });
+    const fresh = [];
+    for (let i = 0; i < entries.length; i++) {
+      try {
+        const r = await fetch("/api/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ input: entries[i], isUrl: isURL(entries[i]), preferences: prefs }),
+        });
+        const d = await r.json();
+        if (d.error) throw new Error(d.error);
+        fresh.push({ ...d, id: Date.now() + Math.random(), sourceInput: entries[i],
+          isUrl: isURL(entries[i]), analyzedAt: new Date().toLocaleDateString("fr-FR") });
+        setLastResult(d);
+      } catch(e) { setErrors(prev => [...prev, `#${i+1}: ${e.message}`]); }
+      setProgress({ done: i+1, total: entries.length });
+    }
+    setJobs(prev => {
+      const seen = new Set();
+      return [...fresh, ...prev].filter(j => { if (seen.has(j.sourceInput)) return false; seen.add(j.sourceInput); return true; });
+    });
+    setLoading(false); setJobLink(""); setJobDesc("");
   }, [pref1, pref2, pref3, jobLink, jobDesc]);
 
   const sorted = [...jobs]
@@ -304,7 +311,7 @@ export default function Home() {
         {/* ── INPUT ─────────────────────────────── */}
         <Panel accent={C.green} style={{ marginBottom:20 }}>
           <PanelHeader bg={C.black} color={C.green}>
-            <span>📡</span> INPUT.EXE
+            <span>📡</span> START ANALYSE
           </PanelHeader>
 
           {/* preference */}
@@ -327,16 +334,21 @@ export default function Home() {
           </div>
 
           {/* job link */}
-          <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, display:"flex", alignItems:"center", gap:16 }}>
-            <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", flexShrink:0, width:110, fontWeight:700 }}>JOB LINK</span>
-            <input
+          <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20` }}>
+            <div style={{ display:"flex", alignItems:"baseline", gap:10, marginBottom:6 }}>
+              <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", fontWeight:700 }}>JOB LINK</span>
+              <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:"#555" }}>up to 15 URLs · one per line</span>
+            </div>
+            <textarea
               value={jobLink} onChange={e=>setJobLink(e.target.value)} disabled={loading}
-              placeholder="https://..."
+              rows={4}
+              placeholder={"https://linkedin.com/jobs/...\nhttps://welcometothejungle.com/...\nhttps://..."}
               style={{
-                flex:1, fontFamily:"'Space Mono',monospace", fontSize:12,
+                width:"100%", resize:"vertical",
                 background:"transparent", border:`1.5px solid ${C.black}40`,
-                borderRadius:4, padding:"6px 12px", outline:"none",
-                color:C.blue, caretColor:C.pink,
+                borderRadius:4, padding:"8px 12px", outline:"none",
+                fontFamily:"'Space Mono',monospace", fontSize:12,
+                color:C.blue, caretColor:C.pink, lineHeight:1.8,
               }}
             />
           </div>
@@ -388,14 +400,14 @@ export default function Home() {
               <Btn color={C.pink} small onClick={()=>{ if(confirm("Supprimer tout?")) setJobs([]); }}>✕ Clear</Btn>
             )}
             <Btn onClick={handleAnalyze} disabled={loading||(!jobLink.trim()&&!jobDesc.trim())}>
-              {loading ? "⟳ Analyzing..." : "▶ Analyser"}
+              {loading ? `⟳ ${progress.done}/${progress.total}` : "LET'S CHECK!"}
             </Btn>
           </div>
 
           {loading && (
             <div style={{ padding:"8px 16px", borderTop:`2px solid ${C.black}`, background:`${C.green}18` }}>
-              <div style={{ height:6, background:"#ddd", border:`1.5px solid ${C.black}`, borderRadius:4, overflow:"hidden" }}>
-                <div style={{ height:"100%", background:C.green, width:"60%", borderRadius:3, animation:"marquee 1.2s linear infinite" }} />
+              <div style={{ height:6, background:"#333", border:`1.5px solid ${C.border}`, borderRadius:4, overflow:"hidden" }}>
+                <div style={{ height:"100%", background:C.green, width:`${progress.total ? (progress.done/progress.total)*100 : 10}%`, borderRadius:3, transition:"width .3s" }} />
               </div>
             </div>
           )}
@@ -452,13 +464,13 @@ export default function Home() {
             </div>
           ) : (
             <div style={{ overflowX:"auto" }}>
-              <table style={{ width:"100%", borderCollapse:"collapse", minWidth:860 }}>
+              <table style={{ width:"100%", borderCollapse:"collapse", minWidth:900 }}>
                 <thead>
                   <tr style={{ background:C.black }}>
-                    {["Poste","Lien","Catégorie","Fit","Salaire","Lieu","Stack","Statut",""].map(h=>(
+                    {["JOB TITLE","COMPATIBILITY","SALARY","LOCATION","BRIEF INTRO","REQUIRED TECH STACK",""].map(h=>(
                       <th key={h} style={{
                         padding:"10px 14px", textAlign:"left",
-                        fontFamily:"'Bebas Neue',sans-serif", fontSize:12,
+                        fontFamily:"'Stora',sans-serif", fontSize:12,
                         letterSpacing:2, color:C.cream, whiteSpace:"nowrap",
                       }}>{h}</th>
                     ))}
@@ -466,11 +478,8 @@ export default function Home() {
                 </thead>
                 <tbody>
                   {sorted.map((job, idx) => {
-                    const cat = CAT_META[job.category] || CAT_META.other;
                     const isExp = expanded===job.id;
                     const rowBg = idx%2===0 ? C.paper : "#1E1914";
-                    let host="";
-                    if(job.isUrl){ try{ host=new URL(job.sourceInput).hostname.replace("www.",""); }catch(_){host="link";} }
 
                     return (
                       <>
@@ -485,82 +494,64 @@ export default function Home() {
                           onMouseEnter={e=>{ if(!isExp) e.currentTarget.style.background=`${C.blue}12`; }}
                           onMouseLeave={e=>{ if(!isExp) e.currentTarget.style.background=rowBg; }}
                         >
-                          {/* title */}
-                          <td style={{ padding:"12px 14px", maxWidth:200 }}>
+                          {/* JOB TITLE */}
+                          <td style={{ padding:"12px 14px", minWidth:160 }}>
                             <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:15, letterSpacing:1, color:C.cream }}>{job.title||"—"}</div>
-                            {job.company && <div style={{ fontFamily:"'Space Mono',monospace", fontSize:10, color:"#888", marginTop:1 }}>{job.company}</div>}
-                            <div style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:"#bbb", marginTop:1 }}>{job.analyzedAt}</div>
+                            {job.company && <div style={{ fontFamily:"'Space Mono',monospace", fontSize:10, color:"#888", marginTop:2 }}>{job.company}</div>}
+                            {job.isUrl && (
+                              <a href={job.sourceInput} target="_blank" rel="noopener noreferrer"
+                                onClick={e=>e.stopPropagation()}
+                                style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.blue, textDecoration:"none" }}>
+                                ↗ link
+                              </a>
+                            )}
                           </td>
 
-                          {/* link */}
-                          <td style={{ padding:"12px 14px" }}>
-                            {job.isUrl
-                              ? <a href={job.sourceInput} target="_blank" rel="noopener noreferrer"
-                                  onClick={e=>e.stopPropagation()}
-                                  style={{ fontFamily:"'Space Mono',monospace", fontSize:10, color:C.blue,
-                                    textDecoration:"none", display:"block", maxWidth:130,
-                                    overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
-                                  ↗ {host}
-                                </a>
-                              : <span style={{ fontFamily:"'Space Mono',monospace", fontSize:10, color:"#bbb" }}>JD texte</span>}
-                          </td>
-
-                          {/* category */}
-                          <td style={{ padding:"12px 14px" }}>
-                            <span style={{
-                              fontFamily:"'Space Mono',monospace", fontSize:9, fontWeight:700,
-                              padding:"3px 9px", borderRadius:20,
-                              border:`2px solid ${cat.color}`,
-                              background:cat.bg, color:cat.color,
-                              whiteSpace:"nowrap", letterSpacing:0.5,
-                            }}>{cat.label}</span>
-                          </td>
-
-                          {/* fit */}
+                          {/* COMPATIBILITY */}
                           <td style={{ padding:"12px 14px" }}><FitMeter score={job.fitScore||0} /></td>
 
-                          {/* salary */}
+                          {/* SALARY */}
                           <td style={{ padding:"12px 14px", fontFamily:"'Space Mono',monospace", fontSize:11, color:"#aaa", whiteSpace:"nowrap" }}>{job.salary||"—"}</td>
 
-                          {/* location */}
+                          {/* LOCATION */}
                           <td style={{ padding:"12px 14px", fontFamily:"'Space Mono',monospace", fontSize:11, color:"#aaa", whiteSpace:"nowrap" }}>{job.location||"—"}</td>
 
-                          {/* stack */}
+                          {/* BRIEF INTRO */}
+                          <td style={{ padding:"12px 14px", maxWidth:240 }}>
+                            <div style={{
+                              fontFamily:"'Space Mono',monospace", fontSize:10, color:"#bbb",
+                              lineHeight:1.6, display:"-webkit-box", WebkitLineClamp:3,
+                              WebkitBoxOrient:"vertical", overflow:"hidden",
+                            }}>{job.intro||"—"}</div>
+                          </td>
+
+                          {/* REQUIRED TECH STACK */}
                           <td style={{ padding:"12px 14px" }}>
-                            <div style={{ display:"flex", flexWrap:"wrap", gap:3, maxWidth:180 }}>
-                              {(job.techStack||[]).slice(0,5).map((t,i)=>(
+                            <div style={{ display:"flex", flexWrap:"wrap", gap:3, maxWidth:200 }}>
+                              {(job.techStack||[]).slice(0,6).map((t,i)=>(
                                 <span key={i} style={{
                                   fontFamily:"'Space Mono',monospace", fontSize:9,
                                   padding:"2px 6px", border:`1.5px solid ${C.border}`,
                                   borderRadius:3, background:`${C.blue}25`, color:C.cream,
                                 }}>{t}</span>
                               ))}
-                              {(job.techStack||[]).length>5 && (
-                                <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:"#aaa" }}>+{job.techStack.length-5}</span>
+                              {(job.techStack||[]).length>6 && (
+                                <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:"#aaa" }}>+{job.techStack.length-6}</span>
                               )}
                             </div>
-                          </td>
-
-                          {/* status */}
-                          <td style={{ padding:"12px 14px" }} onClick={e=>e.stopPropagation()}>
-                            <Tag
-                              bg={job.toApply?C.green:C.paper}
-                              onClick={()=>setJobs(p=>p.map(j=>j.id===job.id?{...j,toApply:!j.toApply}:j))}
-                              style={{ fontSize:9 }}
-                            >{job.toApply?"★ TO APPLY":"+ MARK"}</Tag>
                           </td>
 
                           {/* delete */}
                           <td style={{ padding:"12px 14px" }} onClick={e=>e.stopPropagation()}>
                             <button onClick={()=>setJobs(p=>p.filter(j=>j.id!==job.id))}
                               style={{
-                                background:"transparent", border:`1.5px solid ${C.black}30`,
+                                background:"transparent", border:`1.5px solid ${C.border}`,
                                 borderRadius:4, width:26, height:26, cursor:"pointer",
-                                fontFamily:"'Space Mono',monospace", fontSize:12, color:"#ccc",
+                                fontFamily:"'Space Mono',monospace", fontSize:12, color:"#555",
                                 transition:"all .12s", display:"flex", alignItems:"center", justifyContent:"center",
                               }}
                               onMouseEnter={e=>{ e.currentTarget.style.color=C.red; e.currentTarget.style.borderColor=C.red; e.currentTarget.style.background=`${C.red}12`; }}
-                              onMouseLeave={e=>{ e.currentTarget.style.color="#ccc"; e.currentTarget.style.borderColor=`${C.black}30`; e.currentTarget.style.background="transparent"; }}
+                              onMouseLeave={e=>{ e.currentTarget.style.color="#555"; e.currentTarget.style.borderColor=C.border; e.currentTarget.style.background="transparent"; }}
                             >✕</button>
                           </td>
                         </tr>
@@ -568,7 +559,7 @@ export default function Home() {
                         {/* expanded row */}
                         {isExp && (
                           <tr key={`${job.id}-exp`}>
-                            <td colSpan={9} style={{ padding:"0 14px 18px", background:`${C.blue}10` }}>
+                            <td colSpan={7} style={{ padding:"0 14px 18px", background:`${C.blue}10` }}>
                               <div style={{
                                 background:C.paper, border:`2px solid ${C.border}`,
                                 borderRadius:6, padding:16,
