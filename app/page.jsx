@@ -94,12 +94,14 @@ const C = {
 };
 
 /* ─── constants ───────────────────────────────── */
-const CAT_ORDER = ["cloud_devops","backend","fullstack","other"];
+const CAT_ORDER = ["cloud_devops","backend","frontend","ai","fullstack","other"];
 const CAT_META = {
-  cloud_devops: { label:"☁ Cloud & DevOps", color: C.blue,   bg:"#5BC8F520" },
-  backend:      { label:"⚙ Backend",         color: C.green,  bg:"#BAFF2920" },
-  fullstack:    { label:"◈ Fullstack",       color: C.purple, bg:"#C084FC20" },
-  other:        { label:"· Other",           color:"#999",    bg:"#99999920" },
+  cloud_devops: { label:"☁ Cloud & DevOps",   color:"#4ECDC4", bg:"#4ECDC420" },
+  backend:      { label:"⚙ Backend & Data",   color: C.green,  bg:"#BAFF2920" },
+  frontend:     { label:"◻ Frontend",         color: C.purple, bg:"#C084FC20" },
+  ai:           { label:"✦ AI",               color: C.auraMid,bg:"#F7A37620" },
+  fullstack:    { label:"◈ Fullstack",        color: C.pink,   bg:"#F0949F20" },
+  other:        { label:"· Other",            color:"#AAA",    bg:"#AAAAAA20" },
 };
 const fitColor = s =>
   s >= 80 ? C.green : s >= 60 ? C.blue : s >= 40 ? C.yellow : C.pink;
@@ -249,7 +251,7 @@ export default function Home() {
   const [loading,    setLoading]    = useState(false);
   const [progress,   setProgress]   = useState({ done:0, total:0 });
   const [errors,     setErrors]     = useState([]);
-  const [sortBy,     setSortBy]     = useState("fit");
+  const [sortBy,     setSortBy]     = useState("time");
   const [filter,     setFilter]     = useState("all");
   const [expanded,   setExpanded]   = useState(null);
   const [ready,      setReady]      = useState(false);
@@ -325,9 +327,10 @@ export default function Home() {
       if (filter === "to_apply") return j.toApply;
       if (filter === "just_applied") return j.justApplied;
       if (filter === "cloud_devops") return j.category === "cloud_devops" || j.category === "cloud" || j.category === "devops";
+      if (filter === "other") return !["cloud_devops","cloud","devops","backend","frontend","ai","fullstack"].includes(j.category);
       return j.category === filter;
     })
-    .sort((a,b) => b.fitScore-a.fitScore);
+    .sort((a,b) => sortBy === "fit" ? b.fitScore-a.fitScore : b.id-a.id);
 
   const toApplyN = jobs.filter(j=>j.toApply).length;
   const appliedTodayN = jobs.filter(j => j.justApplied && new Date(j.appliedAt).toDateString() === new Date().toDateString()).length;
@@ -368,23 +371,8 @@ export default function Home() {
               fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:11,
               letterSpacing:"0.2em", color:C.auraMid, marginBottom:8,
               textTransform:"uppercase", fontStretch:"condensed", fontWeight:900,
-              display:"flex", alignItems:"center", gap:14, flexWrap:"wrap",
             }}>
-              <span>// Alternance Stage · France 2026</span>
-              {parisTime && (
-                <span style={{
-                  background:"rgba(255,255,255,0.08)",
-                  border:"1px solid rgba(255,255,255,0.18)",
-                  borderRadius:4,
-                  padding:"2px 8px",
-                  fontFamily:"'Bebas Neue',sans-serif",
-                  fontSize:12,
-                  letterSpacing:"0.15em",
-                  color:C.auraCore,
-                }}>
-                  ⟡ PARIS · {parisTime}
-                </span>
-              )}
+              // Alternance Stage · France 2026
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:16 }}>
               <img
@@ -413,6 +401,19 @@ export default function Home() {
           </div>
 
           {/* stat cards */}
+          <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:10 }}>
+          {parisTime && (
+            <div style={{
+              fontFamily:"'Bebas Neue',sans-serif",
+              fontSize:13,
+              letterSpacing:"0.18em",
+              color:C.auraCore,
+              textTransform:"uppercase",
+              opacity:0.85,
+            }}>
+              PARIS · {parisTime}
+            </div>
+          )}
           <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
             {[
               { val:jobs.length, label:"ANALYZED", color:C.blue },
@@ -432,12 +433,13 @@ export default function Home() {
               </div>
             ))}
           </div>
+          </div>
         </header>
 
         {/* ── INPUT ─────────────────────────────── */}
         <Panel accent={C.auraOuter} style={{ marginBottom:20 }}>
           <PanelHeader bg="#1A2060" color={C.auraCore}>
-            <span></span> Vazy! START ANALYSE
+            <span></span> VAZY! ☞ START ANALYZE
           </PanelHeader>
 
           {/* preference */}
@@ -448,7 +450,7 @@ export default function Home() {
                 <span style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:C.muted }}>{n}</span>
                 <input
                   value={val} onChange={e=>set(e.target.value)} disabled={loading}
-                  placeholder="e.g. data / 3D / Angular"
+                  placeholder="e.g. DevOps"
                   style={{
                     fontFamily:"'Space Mono',monospace", fontSize:11, width:110,
                     background:"transparent", border:`1.5px solid ${C.black}40`,
@@ -580,7 +582,7 @@ export default function Home() {
             <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, fontWeight:900 }}>FILTER</span>
             {[
               { key:"all",      label:"ALL",          bg:C.cream },
-              { key:"to_apply", label:"★ TO APPLY",   bg:C.green },
+              { key:"to_apply", label:"★ TO APPLY",   bg:C.yellow },
               { key:"just_applied", label:"✓ JUST APPLIED!", bg:C.blue },
               ...CAT_ORDER.map(c=>({ key:c, label:CAT_META[c].label, bg:CAT_META[c].color })),
             ].map(({ key, label, bg }) => (
@@ -588,10 +590,11 @@ export default function Home() {
                 color={filter===key?C.black:C.cream} style={{ opacity: filter===key?1:0.55 }}>{label}</Tag>
             ))}
             <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, marginLeft:8, fontWeight:900 }}>SORT</span>
-            {[{key:"fit",label:"FIT ↓"}].map(({ key, label })=>(
-              <Tag key={key} onClick={()=>setSortBy(key)} bg={sortBy===key?C.yellow:C.paper}
-                color={sortBy===key?C.black:C.cream} style={{ opacity:sortBy===key?1:0.55 }}>{label}</Tag>
-            ))}
+            <Tag onClick={()=>setSortBy(s => s==="fit" ? "time" : "fit")}
+              bg={sortBy==="fit" ? C.yellow : C.paper}
+              color={sortBy==="fit" ? C.black : C.cream}>
+              {sortBy==="fit" ? "FIT ↓" : "TIME ↓"}
+            </Tag>
           </div>
         )}
 
