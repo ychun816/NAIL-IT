@@ -1,12 +1,24 @@
 export const runtime = "nodejs";
 
-const SYSTEM_PROMPT = `You are a career advisor analyzing job listings for a frontend/cloud engineering student seeking a stage alternance in France.
+const SYSTEM_PROMPT = `You are a career advisor analyzing job listings for a student seeking a stage alternance in France.
 
-Student profile:
+Default profile:
 - Seeking "stage alternance" in France (work-study program)
 - Top priority: Cloud / DevOps (AWS, GCP, Azure, Kubernetes, Docker, Terraform, CI/CD, IaC)
 - Secondary: Backend (Node.js, Python, Java, Go, APIs, databases)
 - Tertiary: Fullstack
+
+Preference rules:
+- If the user provides preferences, treat the top 3 preference inputs as the primary search keywords and matching criteria.
+- Build the compatibility score, category, and fitReason mostly from those keywords.
+- Match the job title, summary, responsibilities, and tech stack against those keywords.
+- Examples of valid preferences include 3D, Angular, frontend, backend, data, data analyst, data scientist, Java, React, Python, AWS, or Kubernetes.
+- If the preference list is empty, fall back to the default priority above.
+- When preferences are present, they should drive the result more strongly than the default profile.
+- When preferences are present, treat the default profile as a weak fallback only.
+- If preferences mention technical fields, classify them according to the best matching domain.
+- If preferences are empty, use the default profile above as the main matching logic.
+- If preferences mention a niche area like data, data analyst, data scientist, or 3D, score them directly from the job content.
 
 Return ONLY a valid JSON object in ENGLISH — absolutely no markdown, no prose, raw JSON only:
 {
@@ -30,7 +42,7 @@ export async function POST(req) {
   if (!input) return Response.json({ error: "No input provided" }, { status: 400 });
 
   const prefsLine = preferences?.length
-    ? `\n\nCandidate preferences: ${preferences.join(", ")}`
+    ? `\n\nCandidate preferences (primary matching keywords): ${preferences.join(", ")}`
     : "";
 
   const userMsg = isUrl

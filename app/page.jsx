@@ -417,7 +417,7 @@ export default function Home() {
                 <span style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:C.muted }}>{n}</span>
                 <input
                   value={val} onChange={e=>set(e.target.value)} disabled={loading}
-                  placeholder="e.g. DevOps"
+                  placeholder="e.g. data / 3D / Angular"
                   style={{
                     fontFamily:"'Space Mono',monospace", fontSize:11, width:110,
                     background:"transparent", border:`1.5px solid ${C.black}40`,
@@ -517,7 +517,7 @@ export default function Home() {
           {/* actions */}
           <div style={{ padding:"12px 16px", display:"flex", alignItems:"center", justifyContent:"flex-end", gap:10, background:`${C.black}08` }}>
             {jobs.length>0 && (
-              <Btn color={C.pink} small onClick={()=>{ if(confirm("Supprimer tout?")) setJobs([]); }}>✕ Clear</Btn>
+              <Btn color={C.pink} small onClick={()=>{ if(confirm("Sure you wanna clear everything?")) setJobs([]); }}>✕ Clear</Btn>
             )}
             <Btn onClick={handleAnalyze} disabled={loading||(!jobLink.trim()&&!jobDesc.trim())}>
               {loading ? `⟳ ${progress.done}/${progress.total}` : "LET'S CHECK!"}
