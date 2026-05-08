@@ -244,6 +244,7 @@ export default function Home() {
     .sort((a,b) => b.fitScore-a.fitScore);
 
   const toApplyN = jobs.filter(j=>j.toApply).length;
+  const appliedTodayN = jobs.filter(j => j.justApplied && new Date(j.appliedAt).toDateString() === new Date().toDateString()).length;
 
   /* ── render ─────────────────────────────────── */
   return (
@@ -314,6 +315,7 @@ export default function Home() {
             {[
               { val:jobs.length, label:"ANALYZED", color:C.blue },
               { val:toApplyN,    label:"TO APPLY",  color:C.pink },
+              { val:appliedTodayN, label:"APPLIED TODAY!", color:C.green },
             ].map(({ val, label, color }) => (
               <div key={label} style={{
                 background:"#1A2060", color:C.cream,
@@ -593,7 +595,7 @@ export default function Home() {
 
                           {/* actions */}
                           <td style={{ padding:"12px 14px", display:"flex", gap:8 }} onClick={e=>e.stopPropagation()}>
-                            <button onClick={()=>setJobs(p=>p.map(j => j.id === job.id ? { ...j, justApplied: !j.justApplied } : j))}
+                            <button onClick={()=>setJobs(p=>p.map(j => j.id === job.id ? { ...j, justApplied: !j.justApplied, appliedAt: new Date() } : j))}
                               style={{
                                 background: job.justApplied ? `${C.blue}30` : "transparent", border:`1.5px solid ${job.justApplied ? C.blue : C.border}`,
                                 borderRadius:4, width:26, height:26, cursor:"pointer",
