@@ -289,7 +289,7 @@ export default function Home() {
                 lineHeight:0.95,
                 color:C.auraCore,
               }}>
-                NAIL<span style={{ WebkitTextStroke:`3px rgba(255,255,255,0.3)`, color:C.auraCore }}> IT</span>
+                NAIL<span style={{ color:C.auraCore }}> IT</span>
                 <span style={{
                   display:"block", fontFamily:"'Playfair Display',serif",
                   fontSize:"clamp(16px,2.2vw,26px)", color:C.auraOuter,
