@@ -8,18 +8,18 @@ Student profile:
 - Secondary: Backend (Node.js, Python, Java, Go, APIs, databases)
 - Tertiary: Fullstack
 
-Return ONLY a valid JSON object — absolutely no markdown, no prose, raw JSON only:
+Return ONLY a valid JSON object in ENGLISH — absolutely no markdown, no prose, raw JSON only:
 {
-  "title": "exact job title",
+  "title": "exact job title in English",
   "company": "company name or empty string",
   "category": "cloud_devops" | "backend" | "fullstack" ,
   "fitScore": <integer 0-100>,
-  "salary": "e.g. 1200€/mois or Non précisé",
+  "salary": "e.g. $1500/month or Not specified",
   "location": "City, Country",
-  "intro": "2-3 sentence summary of the role and why it matters for the student",
+  "intro": "2-3 sentence summary in English of the role and why it matters for the student",
   "techStack": ["tech1","tech2","tech3"],
   "toApply": <true only if category is cloud_devops>,
-  "fitReason": "one sentence explaining the fit score"
+  "fitReason": "one sentence in English explaining the fit score"
 }`;
 
 export async function POST(req) {

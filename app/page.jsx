@@ -1,6 +1,76 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
 
+/* ─── translations ────────────────────────────── */
+const translations = {
+  EN: {
+    alternance: "Alternance Internship · France 2026",
+    analyzer: "job compatibility analyzer ✦",
+    preference: "PREFERENCE",
+    job_link: "JOB LINK",
+    link_hint: "up to 20 URLs · must start with http:// or https://",
+    job_description: "JOB DESCRIPTION",
+    desc_placeholder: "Paste job description here...",
+    analyzing: "⟳ analyzing...",
+    lets_check: "LET'S CHECK!",
+    clear: "✕ Clear",
+    no_data: "NO DATA",
+    no_results: "NO RESULTS",
+    paste_links: "paste links / job descriptions and click ANALYZE",
+    modify_filters: "modify filters",
+    job_summary: "JOB SUMMARY",
+    why_score: "WHY THIS SCORE?",
+    full_stack: "FULL TECH STACK",
+    analyzed: "ANALYZED",
+    to_apply: "TO APPLY",
+    applied_today: "APPLIED TODAY!",
+  },
+  FR: {
+    alternance: "Alternance Stage · France 2026",
+    analyzer: "analyseur de compatibilité ✦",
+    preference: "PRÉFÉRENCE",
+    job_link: "LIEN D'EMPLOI",
+    link_hint: "jusqu'à 20 URLs · doit commencer par http:// ou https://",
+    job_description: "DESCRIPTION DU POSTE",
+    desc_placeholder: "Collez la description du poste ici...",
+    analyzing: "⟳ analyse en cours...",
+    lets_check: "VÉRIFIONS!",
+    clear: "✕ Supprimer",
+    no_data: "PAS DE DONNÉES",
+    no_results: "AUCUN RÉSULTAT",
+    paste_links: "collez des liens / descriptions et cliquez ANALYSER",
+    modify_filters: "modifiez les filtres",
+    job_summary: "RÉSUMÉ DU POSTE",
+    why_score: "POURQUOI CE SCORE ?",
+    full_stack: "STACK COMPLÈTE",
+    analyzed: "ANALYSÉ",
+    to_apply: "À POSTULER",
+    applied_today: "✓ APPLIQUÉ AUJOURD'HUI!",
+  },
+  CH: {
+    alternance: "實習計劃 · 法國 2026",
+    analyzer: "職位兼容性分析器 ✦",
+    preference: "偏好",
+    job_link: "職位連結",
+    link_hint: "最多20個URL · 必須以http://或https://開頭",
+    job_description: "職位描述",
+    desc_placeholder: "貼上職位描述...",
+    analyzing: "⟳ 分析中...",
+    lets_check: "檢查!",
+    clear: "✕ 清除",
+    no_data: "無數據",
+    no_results: "無結果",
+    paste_links: "貼上連結/描述並點擊分析",
+    modify_filters: "修改篩選條件",
+    job_summary: "職位概要",
+    why_score: "為什麼這個分數?",
+    full_stack: "完整技術棧",
+    analyzed: "已分析",
+    to_apply: "待申請",
+    applied_today: "✓ 今天已申請!",
+  }
+};
+
 /* ─── palette ─────────────────────────────────── */
 const C = {
   /* Aura-Grit tokens */
@@ -196,7 +266,7 @@ export default function Home() {
 
   const handleAnalyze = useCallback(async () => {
     const links = (inputType === "urls" && jobLink.trim())
-      ? jobLink.trim().split("\n").map(u => u.replace(/^\d+\.\s*/, '').trim()).filter(u => u && (u.startsWith("http://") || u.startsWith("https://"))).slice(0, 20)
+      ? jobLink.trim().split("\n").map(u => u.trim()).filter(u => u && (u.startsWith("http://") || u.startsWith("https://"))).slice(0, 20)
       : [];
     const entries = inputType === "urls" ? links : (jobDesc.trim() ? [jobDesc.trim()] : []);
     if (!entries.length) return;
@@ -245,6 +315,8 @@ export default function Home() {
 
   const toApplyN = jobs.filter(j=>j.toApply).length;
   const appliedTodayN = jobs.filter(j => j.justApplied && new Date(j.appliedAt).toDateString() === new Date().toDateString()).length;
+  const linkLines = jobLink === "" ? [] : jobLink.split('\n').slice(0,20);
+  const numbersCount = Math.min(20, Math.max(linkLines.length + 1, 1));
 
   /* ── render ─────────────────────────────────── */
   return (
@@ -255,14 +327,13 @@ export default function Home() {
         background:"#1A2060", overflow:"hidden", whiteSpace:"nowrap",
         borderBottom:`2px solid rgba(255,255,255,0.12)`, position:"relative", zIndex:10,
       }}>
-        <div style={{ display:"inline-flex", animation:"marquee 10s linear infinite" }}>
+        <div style={{ display:"inline-flex", animation:"marquee 12s linear infinite" }}>
           {[...Array(2)].map((_,k) => (
             <span key={k} style={{
               fontFamily:"'Bebas Neue',sans-serif", letterSpacing:4,
               fontSize:13, padding:"7px 0", color:C.cream,
             }}>
-              &nbsp;&nbsp;★&nbsp; STAGE &nbsp;·&nbsp; ALTERNANCE &nbsp;·&nbsp;
-              ★&nbsp;&nbsp;STAGE &nbsp;·&nbsp; ALTERNANCE &nbsp;·&nbsp;
+              &nbsp;&nbsp;★&nbsp; STAGE &nbsp;·&nbsp; ALTERNANCE &nbsp;·&nbsp; INTERNSHIP &nbsp;·&nbsp; BONNE CHANCE &nbsp;·&nbsp; CAREERS &nbsp;·&nbsp; CLOUD &nbsp;·&nbsp; DEVOPS &nbsp;·&nbsp; BACKEND &nbsp;·&nbsp; FRONTEND &nbsp;·&nbsp; FULLSTACK &nbsp;·&nbsp; APPLY &nbsp;·&nbsp; DATA &nbsp;·&nbsp; AI &nbsp;·&nbsp; GROWTH&nbsp;&nbsp;
             </span>
           ))}
         </div>
@@ -393,27 +464,30 @@ export default function Home() {
                   <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, fontWeight:700 }}>JOB LINK</span>
                   <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>up to 20 URLs · must start with http:// or https://</span>
                 </div>
-                <textarea
-                  value={jobLink}
-                  onChange={e => {
-                    const lines = e.target.value.split('\n');
-                    const numbered = lines.slice(0, 20).map((line, i) => {
-                      const cleaned = line.replace(/^\d+\.\s*/, '');
-                      return cleaned || i === Math.min(lines.length, 20) - 1 ? `${i + 1}. ${cleaned}` : '';
-                    }).filter(Boolean);
-                    setJobLink(numbered.join('\n'));
-                  }}
-                  disabled={loading}
-                  rows={4}
-                  placeholder={"1. https://linkedin.com/jobs/...\n2. https://welcometothejungle.com/...\n3. https://..."}
-                  style={{
-                    width:"100%", resize:"vertical",
-                    background:"transparent", border:`1.5px solid ${C.black}40`,
-                    borderRadius:4, padding:"8px 12px", outline:"none",
-                    fontFamily:"'Space Mono',monospace", fontSize:12,
-                    color:C.blue, caretColor:C.pink, lineHeight:1.8,
-                  }}
-                />
+                <div style={{ display:"flex", gap:8 }}>
+                  <div style={{ width:40, paddingTop:8, paddingLeft:6, paddingRight:6, textAlign:"right", color:C.black, fontFamily:"'Space Mono',monospace", fontSize:12 }}>
+                    {Array.from({ length: numbersCount }).map((_,i) => (
+                      <div key={i} style={{ height:24, lineHeight:"24px", color: i < linkLines.length ? C.black : "rgba(255,255,255,0.35)", userSelect:"none" }}>{i+1}.</div>
+                    ))}
+                  </div>
+                  <textarea
+                    value={jobLink}
+                    onChange={e => {
+                      const lines = e.target.value.split('\n').slice(0,20);
+                      setJobLink(lines.join('\n'));
+                    }}
+                    disabled={loading}
+                    rows={4}
+                    placeholder={"https://example.com/job-1\nhttps://example.com/job-2"}
+                    style={{
+                      width:"100%", resize:"vertical",
+                      background:"transparent", border:`1.5px solid ${C.black}40`,
+                      borderRadius:4, padding:"8px 12px", outline:"none",
+                      fontFamily:"'Space Mono',monospace", fontSize:12,
+                      color:C.blue, caretColor:C.pink, lineHeight:1.8,
+                    }}
+                  />
+                </div>
               </>
             ) : (
               <>
@@ -421,7 +495,7 @@ export default function Home() {
                 <textarea
                   value={jobDesc} onChange={e=>setJobDesc(e.target.value)} disabled={loading}
                   rows={5}
-                  placeholder="> Collez la description du poste ici..."
+                  placeholder="> Paste job description here..."
                   style={{
                     width:"100%", resize:"vertical",
                     background:"transparent", border:`1.5px solid ${C.black}40`,
@@ -493,7 +567,7 @@ export default function Home() {
         {/* ── TABLE ─────────────────────────────── */}
         <Panel accent={C.auraMid}>
           <PanelHeader bg="#1A2060" color={C.auraCore}>
-            📊 OFFERS TO APPLY — {sorted.length}
+            COMPATIBILITY ANALYSIS — {sorted.length}
             <Star size={16} color={C.auraCore} style={{ marginLeft:"auto" }} />
           </PanelHeader>
 
@@ -503,10 +577,10 @@ export default function Home() {
                 animation:"wiggle 2s ease-in-out infinite",
                 display:"inline-block" }}>✦</div>
               <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:22, letterSpacing:3, color:C.muted }}>
-                {jobs.length===0 ? "PAS DE DONNÉES" : "AUCUN RÉSULTAT"}
+                {jobs.length===0 ? "NO DATA" : "NO RESULTS"}
               </div>
               <div style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:C.muted, marginTop:6 }}>
-                {jobs.length===0 ? "collez des liens / JDs et cliquez ANALYSER" : "modifiez les filtres"}
+                {jobs.length===0 ? "paste links / job descriptions and click ANALYZE" : "modify filters"}
               </div>
             </div>
           ) : (
@@ -526,7 +600,7 @@ export default function Home() {
                 <tbody>
                   {sorted.map((job, idx) => {
                     const isExp = expanded===job.id;
-                    const rowBg = idx%2===0 ? C.paper : "#1E1914";
+                    const rowBg = job.justApplied ? "#1E1914" : C.paper;
 
                     return (
                       <>
@@ -595,6 +669,15 @@ export default function Home() {
 
                           {/* actions */}
                           <td style={{ padding:"12px 14px", display:"flex", gap:8 }} onClick={e=>e.stopPropagation()}>
+                            <button onClick={()=>setJobs(p=>p.map(j => j.id === job.id ? { ...j, toApply: !j.toApply } : j))}
+                              style={{
+                                background: job.toApply ? `${C.yellow}20` : "transparent", border:`1.5px solid ${job.toApply ? C.yellow : C.border}`,
+                                borderRadius:4, width:26, height:26, cursor:"pointer",
+                                fontFamily:"'Space Mono',monospace", fontSize:14, color: job.toApply ? C.black : C.muted,
+                                transition:"all .12s", display:"flex", alignItems:"center", justifyContent:"center",
+                              }}
+                              title={job.toApply ? "Remove from To Apply" : "Mark To Apply"}
+                            >★</button>
                             <button onClick={()=>setJobs(p=>p.map(j => j.id === job.id ? { ...j, justApplied: !j.justApplied, appliedAt: new Date() } : j))}
                               style={{
                                 background: job.justApplied ? `${C.blue}30` : "transparent", border:`1.5px solid ${job.justApplied ? C.blue : C.border}`,
@@ -629,16 +712,16 @@ export default function Home() {
                                 animation:"slideUp .2s ease",
                               }}>
                                 <div>
-                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:6 }}>▸ RÉSUMÉ DU POSTE</div>
+                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:6 }}>▸ JOB SUMMARY</div>
                                   <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:C.muted }}>{job.intro}</div>
                                 </div>
                                 <div>
-                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:6 }}>▸ POURQUOI CE SCORE ?</div>
+                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:6 }}>▸ WHY THIS SCORE?</div>
                                   <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:C.muted }}>{job.fitReason}</div>
                                 </div>
                                 {job.techStack?.length>0 && (
                                   <div style={{ gridColumn:"1/-1" }}>
-                                    <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:8 }}>▸ STACK COMPLÈTE</div>
+                                    <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:8 }}>▸ FULL TECH STACK</div>
                                     <div style={{ display:"flex", flexWrap:"wrap", gap:5 }}>
                                       {job.techStack.map((t,i)=>(
                                         <span key={i} style={{
