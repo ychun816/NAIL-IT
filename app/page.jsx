@@ -254,6 +254,22 @@ export default function Home() {
   const [expanded,   setExpanded]   = useState(null);
   const [ready,      setReady]      = useState(false);
   const [inputType,  setInputType]  = useState("urls");
+  const [parisTime,  setParisTime]  = useState("");
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      setParisTime(now.toLocaleString("fr-FR", {
+        timeZone: "Europe/Paris",
+        weekday: "short", day: "2-digit", month: "short",
+        hour: "2-digit", minute: "2-digit", second: "2-digit",
+        hour12: false,
+      }).toUpperCase());
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     try { const s = localStorage.getItem(STORAGE); if(s) setJobs(JSON.parse(s)); } catch(_){}
@@ -333,7 +349,7 @@ export default function Home() {
               fontFamily:"'Bebas Neue',sans-serif", letterSpacing:5,
               fontSize:13, padding:"7px 0", color:C.cream,
             }}>
-              &nbsp;&nbsp; ★ &nbsp; STAGE &nbsp; ★ &nbsp; ALTERNANCE &nbsp; ❤︎ &nbsp; INTERNSHIP &nbsp; ✦ &nbsp; BONNE CHANCE &nbsp; ❤︎ &nbsp; CAREERS &nbsp; ✦ &nbsp; CHARBONER MÊME SI TU AS LA FLEMME ★ &nbsp;·&nbsp; 
+              &nbsp;&nbsp; ★ &nbsp; STAGE &nbsp; ★ &nbsp; ALTERNANCE &nbsp; ❤︎ &nbsp; INTERNSHIP &nbsp; ✦ &nbsp; BONNE CHANCE &nbsp; ❤︎ &nbsp; CAREERS &nbsp; ✦ &nbsp; CHARBONER MÊME SI TU AS LA FLEMME ★ &nbsp; 
             </span>
           ))}
         </div>
@@ -352,8 +368,23 @@ export default function Home() {
               fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:11,
               letterSpacing:"0.2em", color:C.auraMid, marginBottom:8,
               textTransform:"uppercase", fontStretch:"condensed", fontWeight:900,
+              display:"flex", alignItems:"center", gap:14, flexWrap:"wrap",
             }}>
-              // Alternance Stage · France 2026
+              <span>// Alternance Stage · France 2026</span>
+              {parisTime && (
+                <span style={{
+                  background:"rgba(255,255,255,0.08)",
+                  border:"1px solid rgba(255,255,255,0.18)",
+                  borderRadius:4,
+                  padding:"2px 8px",
+                  fontFamily:"'Bebas Neue',sans-serif",
+                  fontSize:12,
+                  letterSpacing:"0.15em",
+                  color:C.auraCore,
+                }}>
+                  ⟡ PARIS · {parisTime}
+                </span>
+              )}
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:16 }}>
               <img
