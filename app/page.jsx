@@ -185,6 +185,7 @@ export default function Home() {
   const [filter,     setFilter]     = useState("all");
   const [expanded,   setExpanded]   = useState(null);
   const [ready,      setReady]      = useState(false);
+  const [inputType,  setInputType]  = useState("urls");
 
   useEffect(() => {
     try { const s = localStorage.getItem(STORAGE); if(s) setJobs(JSON.parse(s)); } catch(_){}
@@ -196,10 +197,10 @@ export default function Home() {
   }, [jobs, ready]);
 
   const handleAnalyze = useCallback(async () => {
-    const links = jobLink.trim()
-      ? jobLink.trim().split("\n").map(u => u.trim()).filter(Boolean).slice(0, 15)
+    const links = (inputType === "urls" && jobLink.trim())
+      ? jobLink.trim().split("\n").map(u => u.replace(/^\d+\.\s*/, '').trim()).filter(Boolean).slice(0, 15)
       : [];
-    const entries = links.length ? links : jobDesc.trim() ? [jobDesc.trim()] : [];
+    const entries = inputType === "urls" ? links : (jobDesc.trim() ? [jobDesc.trim()] : []);
     if (!entries.length) return;
     const prefs = [pref1, pref2, pref3].filter(Boolean);
     setLoading(true); setErrors([]); setProgress({ done:0, total:entries.length });
@@ -341,7 +342,7 @@ export default function Home() {
                 <span style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:C.muted }}>{n}</span>
                 <input
                   value={val} onChange={e=>set(e.target.value)} disabled={loading}
-                  placeholder="e.g. ur job preference"
+                  placeholder="e.g. DevOps"
                   style={{
                     fontFamily:"'Space Mono',monospace", fontSize:11, width:110,
                     background:"transparent", border:`1.5px solid ${C.black}40`,
@@ -352,66 +353,88 @@ export default function Home() {
             ))}
           </div>
 
-          {/* job link */}
-          <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20` }}>
-            <div style={{ display:"flex", alignItems:"baseline", gap:10, marginBottom:6 }}>
-              <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, fontWeight:700 }}>JOB LINK</span>
-              <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>up to 15 URLs · one per line</span>
-            </div>
-            <textarea
-              value={jobLink} onChange={e=>setJobLink(e.target.value)} disabled={loading}
-              rows={4}
-              placeholder={"https://linkedin.com/jobs/...\nhttps://welcometothejungle.com/...\nhttps://..."}
+          {/* tabs */}
+          <div style={{ display:"flex", borderBottom:`1.5px solid ${C.black}20` }}>
+            <button
+              onClick={() => setInputType("urls")}
               style={{
-                width:"100%", resize:"vertical",
-                background:"transparent", border:`1.5px solid ${C.black}40`,
-                borderRadius:4, padding:"8px 12px", outline:"none",
-                fontFamily:"'Space Mono',monospace", fontSize:12,
-                color:C.blue, caretColor:C.pink, lineHeight:1.8,
+                flex: 1, padding: "12px 16px", background: inputType === "urls" ? "transparent" : "rgba(0,0,0,0.1)",
+                border: "none", borderRight: `1.5px solid ${C.black}20`,
+                fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 12, letterSpacing: 2,
+                color: inputType === "urls" ? C.black : C.muted, fontWeight: 700, cursor: "pointer",
+                textAlign: "left"
               }}
-            />
+            >
+              JOB LINK
+            </button>
+            <button
+              onClick={() => setInputType("desc")}
+              style={{
+                flex: 1, padding: "12px 16px", background: inputType === "desc" ? "transparent" : "rgba(0,0,0,0.1)",
+                border: "none",
+                fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 12, letterSpacing: 2,
+                color: inputType === "desc" ? C.black : C.muted, fontWeight: 700, cursor: "pointer",
+                textAlign: "left"
+              }}
+            >
+              JOB DESCRIPTION
+            </button>
           </div>
 
-          {/* job description */}
+          {/* tab content */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20` }}>
-            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, marginBottom:8, fontWeight:700 }}>JOB DESCRIPTION</div>
-            <textarea
-              value={jobDesc} onChange={e=>setJobDesc(e.target.value)} disabled={loading}
-              rows={5}
-              placeholder="> Collez la description du poste ici..."
-              style={{
-                width:"100%", resize:"vertical",
-                background:"transparent", border:`1.5px solid ${C.black}40`,
-                borderRadius:4, padding:"8px 12px", outline:"none",
-                fontFamily:"'Space Mono',monospace", fontSize:12,
-                color:C.black, lineHeight:1.6, caretColor:C.pink,
-              }}
-            />
-          </div>
-
-          {/* analysis compatibility */}
-          <div style={{ padding:"12px 16px", borderBottom:`2px solid ${C.black}` }}>
-            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, marginBottom:8, fontWeight:700 }}>ANALYSIS COMPATIBILITY</div>
-            <div style={{
-              minHeight:52, border:`1.5px solid ${C.black}40`, borderRadius:4,
-              padding:"10px 14px", background:`${C.black}05`,
-              fontFamily:"'Space Mono',monospace", fontSize:12, color:C.black, lineHeight:1.6,
-            }}>
-              {loading ? (
-                <span style={{ color:C.green }}>⟳ analyzing...</span>
-              ) : lastResult ? (
-                <div style={{ display:"flex", gap:16, alignItems:"flex-start" }}>
-                  <div style={{ flexShrink:0 }}>
-                    <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:30, lineHeight:1, color:fitColor(lastResult.fitScore||0) }}>{lastResult.fitScore}</span>
-                    <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>/100</span>
-                  </div>
-                  <div style={{ fontSize:11, color:C.muted, lineHeight:1.7 }}>{lastResult.fitReason}</div>
+            {inputType === "urls" ? (
+              <>
+                <div style={{ display:"flex", alignItems:"baseline", gap:10, marginBottom:6 }}>
+                  <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, fontWeight:700 }}>JOB LINK</span>
+                  <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>up to 15 URLs · one per line</span>
                 </div>
-              ) : (
-                <span style={{ color:C.muted }}>— awaiting analysis —</span>
-              )}
-            </div>
+                <textarea
+                  value={jobLink}
+                  onChange={e => {
+                    const lines = e.target.value.split('\n');
+                    const numbered = lines.map((line, i) => {
+                      const cleaned = line.replace(/^\d+\.\s*/, '');
+                      return cleaned || i === lines.length - 1 ? `${i + 1}. ${cleaned}` : '';
+                    }).filter(Boolean);
+                    setJobLink(numbered.join('\n'));
+                  }}
+                  disabled={loading}
+                  rows={4}
+                  placeholder={"1. https://linkedin.com/jobs/...\n2. https://welcometothejungle.com/...\n3. https://..."}
+                  style={{
+                    width:"100%", resize:"vertical",
+                    background:"transparent", border:`1.5px solid ${C.black}40`,
+                    borderRadius:4, padding:"8px 12px", outline:"none",
+                    fontFamily:"'Space Mono',monospace", fontSize:12,
+                    color:C.blue, caretColor:C.pink, lineHeight:1.8,
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, marginBottom:8, fontWeight:700 }}>JOB DESCRIPTION</div>
+                <textarea
+                  value={jobDesc} onChange={e=>setJobDesc(e.target.value)} disabled={loading}
+                  rows={5}
+                  placeholder="> Collez la description du poste ici..."
+                  style={{
+                    width:"100%", resize:"vertical",
+                    background:"transparent", border:`1.5px solid ${C.black}40`,
+                    borderRadius:4, padding:"8px 12px", outline:"none",
+                    fontFamily:"'Space Mono',monospace", fontSize:12,
+                    color:C.black, lineHeight:1.6, caretColor:C.pink,
+                  }}
+                />
+              </>
+            )}
           </div>
+
+          {loading && (
+            <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, textAlign:"center", fontFamily:"'Space Mono',monospace", fontSize:12, color:C.green }}>
+              ⟳ analyzing...
+            </div>
+          )}
 
           {/* actions */}
           <div style={{ padding:"12px 16px", display:"flex", alignItems:"center", justifyContent:"flex-end", gap:10, background:`${C.black}08` }}>
@@ -628,7 +651,7 @@ export default function Home() {
           display:"flex", alignItems:"center", justifyContent:"center", gap:12,
         }}>
           <Star size={14} color={C.yellow} />
-          NAIL IT · POWERED BY CLAUDE AI · ALTERNANCE 2026
+          NAIL IT · STAGE · ALTERNANCE 2026
           <Star size={14} color={C.pink} />
         </div>
       </div>
