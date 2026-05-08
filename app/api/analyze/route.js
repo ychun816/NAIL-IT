@@ -54,7 +54,7 @@ export async function POST(req) {
   };
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -63,6 +63,17 @@ export async function POST(req) {
   );
 
   const data = await res.json();
+  if (!res.ok || data?.error) {
+    return Response.json(
+      {
+        error: "Gemini API request failed",
+        status: res.status,
+        details: data?.error?.message || "Unknown Gemini API error",
+      },
+      { status: 500 }
+    );
+  }
+
   const text = (data.candidates?.[0]?.content?.parts ?? []).map(p => p.text).join("\n");
   const clean = text.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim();
   const m = clean.match(/\{[\s\S]*\}/);

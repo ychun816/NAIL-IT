@@ -203,6 +203,7 @@ export default function Home() {
     const prefs = [pref1, pref2, pref3].filter(Boolean);
     setLoading(true); setErrors([]); setProgress({ done:0, total:entries.length });
     const fresh = [];
+    let hadErrors = false;
     for (let i = 0; i < entries.length; i++) {
       try {
         const r = await fetch("/api/analyze", {
@@ -215,14 +216,21 @@ export default function Home() {
         fresh.push({ ...d, id: Date.now() + Math.random(), sourceInput: entries[i],
           isUrl: isURL(entries[i]), analyzedAt: new Date().toLocaleDateString("fr-FR") });
         setLastResult(d);
-      } catch(e) { setErrors(prev => [...prev, `#${i+1}: ${e.message}`]); }
+      } catch(e) {
+        hadErrors = true;
+        setErrors(prev => [...prev, `#${i+1}: ${e.message}`]);
+      }
       setProgress({ done: i+1, total: entries.length });
     }
     setJobs(prev => {
       const seen = new Set();
       return [...fresh, ...prev].filter(j => { if (seen.has(j.sourceInput)) return false; seen.add(j.sourceInput); return true; });
     });
-    setLoading(false); setJobLink(""); setJobDesc("");
+    setLoading(false);
+    if (!hadErrors && fresh.length > 0) {
+      setJobLink("");
+      setJobDesc("");
+    }
   }, [pref1, pref2, pref3, jobLink, jobDesc]);
 
   const sorted = [...jobs]
