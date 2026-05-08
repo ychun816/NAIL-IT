@@ -24,14 +24,12 @@ const C = {
 };
 
 /* ─── constants ───────────────────────────────── */
-const CAT_ORDER = ["cloud","devops","backend","fullstack","frontend","other"];
+const CAT_ORDER = ["cloud_devops","backend","fullstack","other"];
 const CAT_META = {
-  cloud: { label:"☁ Cloud", color: C.blue,   bg:"#5BC8F520" },
-  devops: { label:"☁ DevOps", color: C.blue,   bg:"#5BC8F520" },
+  cloud_devops: { label:"☁ Cloud & DevOps", color: C.blue,   bg:"#5BC8F520" },
   backend:      { label:"⚙ Backend",         color: C.green,  bg:"#BAFF2920" },
-  fullstack:    { label:"◈ Fullstack",        color: C.purple, bg:"#C084FC20" },
-  frontend:     { label:"✦ Frontend",         color: C.pink,   bg:"#FF6B9D20" },
-  other:        { label:"· Other",            color:"#999",    bg:"#99999920" },
+  fullstack:    { label:"◈ Fullstack",       color: C.purple, bg:"#C084FC20" },
+  other:        { label:"· Other",           color:"#999",    bg:"#99999920" },
 };
 const fitColor = s =>
   s >= 80 ? C.green : s >= 60 ? C.blue : s >= 40 ? C.yellow : C.pink;
@@ -181,7 +179,7 @@ export default function Home() {
   const [loading,    setLoading]    = useState(false);
   const [progress,   setProgress]   = useState({ done:0, total:0 });
   const [errors,     setErrors]     = useState([]);
-  const [sortBy,     setSortBy]     = useState("category");
+  const [sortBy,     setSortBy]     = useState("fit");
   const [filter,     setFilter]     = useState("all");
   const [expanded,   setExpanded]   = useState(null);
   const [ready,      setReady]      = useState(false);
@@ -198,7 +196,7 @@ export default function Home() {
 
   const handleAnalyze = useCallback(async () => {
     const links = (inputType === "urls" && jobLink.trim())
-      ? jobLink.trim().split("\n").map(u => u.replace(/^\d+\.\s*/, '').trim()).filter(Boolean).slice(0, 15)
+      ? jobLink.trim().split("\n").map(u => u.replace(/^\d+\.\s*/, '').trim()).filter(u => u && (u.startsWith("http://") || u.startsWith("https://"))).slice(0, 20)
       : [];
     const entries = inputType === "urls" ? links : (jobDesc.trim() ? [jobDesc.trim()] : []);
     if (!entries.length) return;
@@ -236,10 +234,14 @@ export default function Home() {
   }, [pref1, pref2, pref3, jobLink, jobDesc]);
 
   const sorted = [...jobs]
-    .filter(j => filter==="all" ? true : filter==="to_apply" ? j.toApply : j.category===filter)
-    .sort((a,b) => sortBy==="category"
-      ? (CAT_ORDER.indexOf(a.category)-CAT_ORDER.indexOf(b.category)) || b.fitScore-a.fitScore
-      : b.fitScore-a.fitScore);
+    .filter(j => {
+      if (filter === "all") return true;
+      if (filter === "to_apply") return j.toApply;
+      if (filter === "just_applied") return j.justApplied;
+      if (filter === "cloud_devops") return j.category === "cloud_devops" || j.category === "cloud" || j.category === "devops";
+      return j.category === filter;
+    })
+    .sort((a,b) => b.fitScore-a.fitScore);
 
   const toApplyN = jobs.filter(j=>j.toApply).length;
 
@@ -302,7 +304,7 @@ export default function Home() {
                   letterSpacing:"-0.02em", lineHeight:0.95,
                   fontWeight:700, fontStyle:"italic", marginTop:6,
                   textShadow:"none",
-                }}>alternance analyzer ✦</span>
+                }}>job compatiability analyzer ✦</span>
               </h1>
             </div>
           </div>
@@ -387,15 +389,15 @@ export default function Home() {
               <>
                 <div style={{ display:"flex", alignItems:"baseline", gap:10, marginBottom:6 }}>
                   <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, fontWeight:700 }}>JOB LINK</span>
-                  <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>up to 15 URLs · one per line</span>
+                  <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>up to 20 URLs · must start with http:// or https://</span>
                 </div>
                 <textarea
                   value={jobLink}
                   onChange={e => {
                     const lines = e.target.value.split('\n');
-                    const numbered = lines.map((line, i) => {
+                    const numbered = lines.slice(0, 20).map((line, i) => {
                       const cleaned = line.replace(/^\d+\.\s*/, '');
-                      return cleaned || i === lines.length - 1 ? `${i + 1}. ${cleaned}` : '';
+                      return cleaned || i === Math.min(lines.length, 20) - 1 ? `${i + 1}. ${cleaned}` : '';
                     }).filter(Boolean);
                     setJobLink(numbered.join('\n'));
                   }}
@@ -470,15 +472,16 @@ export default function Home() {
           <div style={{ display:"flex", flexWrap:"wrap", gap:8, alignItems:"center", marginBottom:16 }}>
             <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, fontWeight:900 }}>FILTER</span>
             {[
-              { key:"all",      label:"TOUS",         bg:C.cream },
+              { key:"all",      label:"ALL",          bg:C.cream },
               { key:"to_apply", label:"★ TO APPLY",   bg:C.green },
+              { key:"just_applied", label:"✓ JUST APPLIED!", bg:C.blue },
               ...CAT_ORDER.map(c=>({ key:c, label:CAT_META[c].label, bg:CAT_META[c].color })),
             ].map(({ key, label, bg }) => (
               <Tag key={key} onClick={()=>setFilter(key)} bg={filter===key?bg:C.paper}
                 color={filter===key?C.black:C.cream} style={{ opacity: filter===key?1:0.55 }}>{label}</Tag>
             ))}
             <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, marginLeft:8, fontWeight:900 }}>SORT</span>
-            {[{key:"category",label:"PRIORITÉ"},{key:"fit",label:"FIT ↓"}].map(({ key, label })=>(
+            {[{key:"fit",label:"FIT ↓"}].map(({ key, label })=>(
               <Tag key={key} onClick={()=>setSortBy(key)} bg={sortBy===key?C.yellow:C.paper}
                 color={sortBy===key?C.black:C.cream} style={{ opacity:sortBy===key?1:0.55 }}>{label}</Tag>
             ))}
@@ -509,7 +512,7 @@ export default function Home() {
               <table style={{ width:"100%", borderCollapse:"collapse", minWidth:900 }}>
                 <thead>
                   <tr style={{ background:C.black }}>
-                    {["JOB TITLE","COMPATIBILITY","SALARY","LOCATION","BRIEF INTRO","REQUIRED TECH STACK",""].map(h=>(
+                    {["#", "JOB TITLE","COMPATIBILITY","SALARY","LOCATION","BRIEF INTRO","REQUIRED TECH STACK",""].map(h=>(
                       <th key={h} style={{
                         padding:"10px 14px", textAlign:"left",
                         fontFamily:"'Stora',sans-serif", fontSize:12,
@@ -536,6 +539,11 @@ export default function Home() {
                           onMouseEnter={e=>{ if(!isExp) e.currentTarget.style.background=`${C.blue}12`; }}
                           onMouseLeave={e=>{ if(!isExp) e.currentTarget.style.background=rowBg; }}
                         >
+                          {/* ORDER NUM */}
+                          <td style={{ padding:"12px 14px", width:30, fontFamily:"'Space Mono',monospace", fontSize:12, color:C.muted, fontWeight:700 }}>
+                            {idx + 1}.
+                          </td>
+
                           {/* JOB TITLE */}
                           <td style={{ padding:"12px 14px", minWidth:160 }}>
                             <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:15, letterSpacing:1, color:C.cream }}>{job.title||"—"}</div>
@@ -583,8 +591,18 @@ export default function Home() {
                             </div>
                           </td>
 
-                          {/* delete */}
-                          <td style={{ padding:"12px 14px" }} onClick={e=>e.stopPropagation()}>
+                          {/* actions */}
+                          <td style={{ padding:"12px 14px", display:"flex", gap:8 }} onClick={e=>e.stopPropagation()}>
+                            <button onClick={()=>setJobs(p=>p.map(j => j.id === job.id ? { ...j, justApplied: !j.justApplied } : j))}
+                              style={{
+                                background: job.justApplied ? `${C.blue}30` : "transparent", border:`1.5px solid ${job.justApplied ? C.blue : C.border}`,
+                                borderRadius:4, width:26, height:26, cursor:"pointer",
+                                fontFamily:"'Space Mono',monospace", fontSize:12, color: job.justApplied ? C.cream : C.muted,
+                                transition:"all .12s", display:"flex", alignItems:"center", justifyContent:"center",
+                              }}
+                              onMouseEnter={e=>{ if(!job.justApplied) { e.currentTarget.style.color=C.blue; e.currentTarget.style.borderColor=C.blue; } }}
+                              onMouseLeave={e=>{ if(!job.justApplied) { e.currentTarget.style.color=C.muted; e.currentTarget.style.borderColor=C.border; } }}
+                            >✓</button>
                             <button onClick={()=>setJobs(p=>p.filter(j=>j.id!==job.id))}
                               style={{
                                 background:"transparent", border:`1.5px solid ${C.border}`,
@@ -601,7 +619,7 @@ export default function Home() {
                         {/* expanded row */}
                         {isExp && (
                           <tr key={`${job.id}-exp`}>
-                            <td colSpan={7} style={{ padding:"0 14px 18px", background:`${C.blue}10` }}>
+                            <td colSpan={8} style={{ padding:"0 14px 18px", background:`${C.blue}10` }}>
                               <div style={{
                                 background:C.paper, border:`2px solid ${C.border}`,
                                 borderRadius:6, padding:16,

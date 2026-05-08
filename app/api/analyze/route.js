@@ -7,13 +7,12 @@ Student profile:
 - Top priority: Cloud / DevOps (AWS, GCP, Azure, Kubernetes, Docker, Terraform, CI/CD, IaC)
 - Secondary: Backend (Node.js, Python, Java, Go, APIs, databases)
 - Tertiary: Fullstack
-- Also considers: Frontend (React, Vue, TypeScript)
 
 Return ONLY a valid JSON object — absolutely no markdown, no prose, raw JSON only:
 {
   "title": "exact job title",
   "company": "company name or empty string",
-  "category": "cloud_devops" | "backend" | "fullstack" | "frontend" | "other",
+  "category": "cloud_devops" | "backend" | "fullstack" ,
   "fitScore": <integer 0-100>,
   "salary": "e.g. 1200€/mois or Non précisé",
   "location": "City, Country",
