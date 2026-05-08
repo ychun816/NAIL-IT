@@ -11,48 +11,52 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --cream:   #E8DFC8;
-  --black:   #0D0B08;
-  --paper:   #181410;
-  --border:  #2E2820;
-  --blue:    #5BC8F5;
-  --pink:    #FF6B9D;
+  /* Aura-Grit tokens */
+  --bg-cobalt:  #4A72E4;
+  --aura-outer: #F0949F;
+  --aura-mid:   #F7A376;
+  --aura-core:  #FDE4C9;
+  --text-primary: #FFFFFF;
+  /* UI tokens */
+  --paper:   #3A5AC4;
+  --border:  rgba(255,255,255,0.18);
+  --muted:   rgba(255,255,255,0.5);
   --green:   #BAFF29;
   --yellow:  #FFE135;
-  --purple:  #C084FC;
-  --red:     #FF3B3B;
-  --ink:     rgba(232,223,200,0.04);
+  --red:     #FF5555;
 }
 
 html, body { height: 100%; }
 
 body {
-  background-color: var(--black);
-  color: var(--cream);
+  background: radial-gradient(ellipse at 50% 30%, #5C85F5 0%, #4A72E4 45%, #3D60C2 100%);
+  background-attachment: fixed;
+  color: var(--text-primary);
   font-family: 'Space Mono', monospace;
   overflow-x: hidden;
 }
 
-/* halftone dot overlay */
+/* subtle halftone dots */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: radial-gradient(var(--ink) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px);
   background-size: 18px 18px;
   pointer-events: none;
   z-index: 0;
 }
 
-/* grain texture */
+/* Grit — fractalNoise overlay */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.5;
+  opacity: 0.18;
 }
 
 /* ── Keyframes ── */

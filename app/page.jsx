@@ -3,16 +3,24 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 /* ─── palette ─────────────────────────────────── */
 const C = {
-  cream:  "#E8DFC8",
-  black:  "#0D0B08",
-  paper:  "#181410",
-  border: "#2E2820",
+  /* Aura-Grit tokens */
+  cobalt:    "#4A72E4",
+  auraOuter: "#F0949F",
+  auraMid:   "#F7A376",
+  auraCore:  "#FDE4C9",
+  /* UI */
+  cream:  "#FFFFFF",
+  black:  "#1A2060",
+  paper:  "#3A5AC4",
+  border: "rgba(255,255,255,0.18)",
+  muted:  "rgba(255,255,255,0.5)",
+  /* accents */
   blue:   "#5BC8F5",
-  pink:   "#FF6B9D",
+  pink:   "#F0949F",
   green:  "#BAFF29",
   yellow: "#FFE135",
   purple: "#C084FC",
-  red:    "#FF3B3B",
+  red:    "#FF5555",
 };
 
 /* ─── constants ───────────────────────────────── */
@@ -47,12 +55,12 @@ const Star = ({ size=40, color=C.yellow, style={} }) => (
   </svg>
 );
 
-const Blob = ({ color, style={} }) => (
+const Blob = ({ style={} }) => (
   <div style={{
     position:"absolute",
     borderRadius:"60% 40% 70% 30% / 50% 60% 40% 50%",
-    background: color,
-    opacity: 0.18,
+    background: "radial-gradient(circle, #FDE4C9 0%, #F7A376 50%, #F0949F 100%)",
+    opacity: 0.45,
     filter: "blur(40px)",
     animation: "blobFloat 8s ease-in-out infinite",
     pointerEvents: "none",
@@ -150,8 +158,8 @@ const FitMeter = ({ score }) => {
         textShadow:`1px 1px 0 ${C.black}`,
       }}>{score}</div>
       <div style={{
-        height:5, width:60, background:"#ddd",
-        border:`1.5px solid ${C.black}`, borderRadius:3,
+        height:5, width:60, background:"rgba(255,255,255,0.2)",
+        border:`1.5px solid rgba(255,255,255,0.3)`, borderRadius:3,
         marginTop:4, overflow:"hidden",
       }}>
         <div style={{ height:"100%", width:`${score}%`, background:fc, borderRadius:2 }} />
@@ -230,14 +238,14 @@ export default function Home() {
     <div style={{ minHeight:"100vh", position:"relative", zIndex:1 }}>
 
       {/* background blobs */}
-      <Blob color={C.blue}   style={{ width:500, height:400, top:-100, left:-150 }} />
-      <Blob color={C.pink}   style={{ width:400, height:350, top:"30%", right:-100, animationDelay:"3s" }} />
-      <Blob color={C.green}  style={{ width:350, height:300, bottom:100, left:"20%", animationDelay:"5s" }} />
+      <Blob style={{ width:560, height:420, top:-120, left:-160 }} />
+      <Blob style={{ width:440, height:380, top:"35%", right:-120, animationDelay:"3s" }} />
+      <Blob style={{ width:380, height:320, bottom:80, left:"15%", animationDelay:"5.5s" }} />
 
       {/* ── MARQUEE ─────────────────────────────── */}
       <div style={{
-        background:C.black, overflow:"hidden", whiteSpace:"nowrap",
-        borderBottom:`2px solid ${C.black}`, position:"relative", zIndex:10,
+        background:"#1A2060", overflow:"hidden", whiteSpace:"nowrap",
+        borderBottom:`2px solid rgba(255,255,255,0.12)`, position:"relative", zIndex:10,
       }}>
         <div style={{ display:"inline-flex", animation:"marquee 10s linear infinite" }}>
           {[...Array(2)].map((_,k) => (
@@ -261,7 +269,11 @@ export default function Home() {
             <Star size={28} color={C.yellow} style={{ position:"absolute", top:-8, left:-12, transform:"rotate(15deg)" }} />
             <Star size={18} color={C.pink}   style={{ position:"absolute", top:20, left:220, transform:"rotate(-10deg)" }} />
 
-            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:3, color:C.pink, marginBottom:6, textTransform:"uppercase" }}>
+            <div style={{
+              fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:11,
+              letterSpacing:"0.2em", color:C.auraMid, marginBottom:8,
+              textTransform:"uppercase", fontStretch:"condensed", fontWeight:900,
+            }}>
               // Alternance Stage · France 2026
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:16 }}>
@@ -273,15 +285,16 @@ export default function Home() {
               <h1 style={{
                 fontFamily:"'Stora',sans-serif",
                 fontSize:"clamp(52px,8vw,88px)",
-                letterSpacing:-1,
-                lineHeight:0.9,
+                letterSpacing:"-0.02em",
+                lineHeight:0.95,
                 color:C.cream,
               }}>
-                NAIL<span style={{ WebkitTextStroke:`3px ${C.black}`, color:C.blue }}> IT</span>
+                NAIL<span style={{ WebkitTextStroke:`3px rgba(255,255,255,0.3)`, color:C.auraCore }}> IT</span>
                 <span style={{
-                  display:"block", fontFamily:"'Bricolage Grotesque',sans-serif",
-                  fontSize:"clamp(18px,2.5vw,28px)", color:C.pink, letterSpacing:2,
-                  fontWeight:300, marginTop:4,
+                  display:"block", fontFamily:"'Playfair Display',serif",
+                  fontSize:"clamp(16px,2.2vw,26px)", color:C.auraOuter,
+                  letterSpacing:"-0.02em", lineHeight:0.95,
+                  fontWeight:700, fontStyle:"italic", marginTop:6,
                 }}>alternance analyzer ✦</span>
               </h1>
             </div>
@@ -294,32 +307,32 @@ export default function Home() {
               { val:toApplyN,    label:"TO APPLY",  color:C.pink },
             ].map(({ val, label, color }) => (
               <div key={label} style={{
-                background:C.black, color:C.cream,
-                border:`2.5px solid ${C.black}`,
+                background:"#1A2060", color:C.cream,
+                border:`2px solid rgba(255,255,255,0.2)`,
                 borderRadius:6,
                 padding:"14px 22px",
                 textAlign:"center",
                 boxShadow:`4px 4px 0 ${color}`,
               }}>
                 <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:42, lineHeight:1, color }}>{val}</div>
-                <div style={{ fontFamily:"'Space Mono',monospace", fontSize:9, letterSpacing:2, color:"#888", marginTop:2 }}>{label}</div>
+                <div style={{ fontFamily:"'Space Mono',monospace", fontSize:9, letterSpacing:2, color:C.muted, marginTop:2 }}>{label}</div>
               </div>
             ))}
           </div>
         </header>
 
         {/* ── INPUT ─────────────────────────────── */}
-        <Panel accent={C.green} style={{ marginBottom:20 }}>
-          <PanelHeader bg={C.black} color={C.green}>
+        <Panel accent={C.auraOuter} style={{ marginBottom:20 }}>
+          <PanelHeader bg="#1A2060" color={C.auraCore}>
             <span>📡</span> START ANALYSE
           </PanelHeader>
 
           {/* preference */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
-            <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", flexShrink:0, fontWeight:700 }}>PREFERENCE</span>
+            <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, flexShrink:0, fontWeight:700 }}>PREFERENCE</span>
             {[["1",pref1,setPref1],["2",pref2,setPref2],["3",pref3,setPref3]].map(([n,val,set])=>(
               <div key={n} style={{ display:"flex", alignItems:"center", gap:6 }}>
-                <span style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:"#aaa" }}>{n}</span>
+                <span style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:C.muted }}>{n}</span>
                 <input
                   value={val} onChange={e=>set(e.target.value)} disabled={loading}
                   placeholder="e.g. DevOps"
@@ -336,8 +349,8 @@ export default function Home() {
           {/* job link */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20` }}>
             <div style={{ display:"flex", alignItems:"baseline", gap:10, marginBottom:6 }}>
-              <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", fontWeight:700 }}>JOB LINK</span>
-              <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:"#555" }}>up to 15 URLs · one per line</span>
+              <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, fontWeight:700 }}>JOB LINK</span>
+              <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>up to 15 URLs · one per line</span>
             </div>
             <textarea
               value={jobLink} onChange={e=>setJobLink(e.target.value)} disabled={loading}
@@ -355,7 +368,7 @@ export default function Home() {
 
           {/* job description */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20` }}>
-            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", marginBottom:8, fontWeight:700 }}>JOB DESCRIPTION</div>
+            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, marginBottom:8, fontWeight:700 }}>JOB DESCRIPTION</div>
             <textarea
               value={jobDesc} onChange={e=>setJobDesc(e.target.value)} disabled={loading}
               rows={5}
@@ -372,7 +385,7 @@ export default function Home() {
 
           {/* analysis compatibility */}
           <div style={{ padding:"12px 16px", borderBottom:`2px solid ${C.black}` }}>
-            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:"#888", marginBottom:8, fontWeight:700 }}>ANALYSIS COMPATIBILITY</div>
+            <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, marginBottom:8, fontWeight:700 }}>ANALYSIS COMPATIBILITY</div>
             <div style={{
               minHeight:52, border:`1.5px solid ${C.black}40`, borderRadius:4,
               padding:"10px 14px", background:`${C.black}05`,
@@ -384,12 +397,12 @@ export default function Home() {
                 <div style={{ display:"flex", gap:16, alignItems:"flex-start" }}>
                   <div style={{ flexShrink:0 }}>
                     <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:30, lineHeight:1, color:fitColor(lastResult.fitScore||0) }}>{lastResult.fitScore}</span>
-                    <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:"#aaa" }}>/100</span>
+                    <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>/100</span>
                   </div>
-                  <div style={{ fontSize:11, color:"#555", lineHeight:1.7 }}>{lastResult.fitReason}</div>
+                  <div style={{ fontSize:11, color:C.muted, lineHeight:1.7 }}>{lastResult.fitReason}</div>
                 </div>
               ) : (
-                <span style={{ color:"#bbb" }}>— awaiting analysis —</span>
+                <span style={{ color:C.muted }}>— awaiting analysis —</span>
               )}
             </div>
           </div>
@@ -426,7 +439,7 @@ export default function Home() {
         {/* ── FILTERS ───────────────────────────── */}
         {jobs.length>0 && (
           <div style={{ display:"flex", flexWrap:"wrap", gap:8, alignItems:"center", marginBottom:16 }}>
-            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:"#888" }}>FILTER</span>
+            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, fontWeight:900 }}>FILTER</span>
             {[
               { key:"all",      label:"TOUS",         bg:C.cream },
               { key:"to_apply", label:"★ TO APPLY",   bg:C.green },
@@ -435,7 +448,7 @@ export default function Home() {
               <Tag key={key} onClick={()=>setFilter(key)} bg={filter===key?bg:C.paper}
                 color={filter===key?C.black:C.cream} style={{ opacity: filter===key?1:0.55 }}>{label}</Tag>
             ))}
-            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:"#888", marginLeft:8 }}>SORT</span>
+            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, marginLeft:8, fontWeight:900 }}>SORT</span>
             {[{key:"category",label:"PRIORITÉ"},{key:"fit",label:"FIT ↓"}].map(({ key, label })=>(
               <Tag key={key} onClick={()=>setSortBy(key)} bg={sortBy===key?C.yellow:C.paper}
                 color={sortBy===key?C.black:C.cream} style={{ opacity:sortBy===key?1:0.55 }}>{label}</Tag>
@@ -444,10 +457,10 @@ export default function Home() {
         )}
 
         {/* ── TABLE ─────────────────────────────── */}
-        <Panel accent={C.blue}>
-          <PanelHeader bg={C.blue} color={C.black}>
+        <Panel accent={C.auraMid}>
+          <PanelHeader bg="#1A2060" color={C.auraCore}>
             📊 OFFERS TO APPLY — {sorted.length}
-            <Star size={16} color={C.black} style={{ marginLeft:"auto" }} />
+            <Star size={16} color={C.auraCore} style={{ marginLeft:"auto" }} />
           </PanelHeader>
 
           {sorted.length===0 ? (
@@ -455,10 +468,10 @@ export default function Home() {
               <div style={{ fontSize:60, marginBottom:16,
                 animation:"wiggle 2s ease-in-out infinite",
                 display:"inline-block" }}>✦</div>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:22, letterSpacing:3, color:"#bbb" }}>
+              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:22, letterSpacing:3, color:C.muted }}>
                 {jobs.length===0 ? "PAS DE DONNÉES" : "AUCUN RÉSULTAT"}
               </div>
-              <div style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:"#ccc", marginTop:6 }}>
+              <div style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:C.muted, marginTop:6 }}>
                 {jobs.length===0 ? "collez des liens / JDs et cliquez ANALYSER" : "modifiez les filtres"}
               </div>
             </div>
@@ -497,7 +510,7 @@ export default function Home() {
                           {/* JOB TITLE */}
                           <td style={{ padding:"12px 14px", minWidth:160 }}>
                             <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:15, letterSpacing:1, color:C.cream }}>{job.title||"—"}</div>
-                            {job.company && <div style={{ fontFamily:"'Space Mono',monospace", fontSize:10, color:"#888", marginTop:2 }}>{job.company}</div>}
+                            {job.company && <div style={{ fontFamily:"'Space Mono',monospace", fontSize:10, color:C.muted, marginTop:2 }}>{job.company}</div>}
                             {job.isUrl && (
                               <a href={job.sourceInput} target="_blank" rel="noopener noreferrer"
                                 onClick={e=>e.stopPropagation()}
@@ -511,15 +524,15 @@ export default function Home() {
                           <td style={{ padding:"12px 14px" }}><FitMeter score={job.fitScore||0} /></td>
 
                           {/* SALARY */}
-                          <td style={{ padding:"12px 14px", fontFamily:"'Space Mono',monospace", fontSize:11, color:"#aaa", whiteSpace:"nowrap" }}>{job.salary||"—"}</td>
+                          <td style={{ padding:"12px 14px", fontFamily:"'Space Mono',monospace", fontSize:11, color:C.muted, whiteSpace:"nowrap" }}>{job.salary||"—"}</td>
 
                           {/* LOCATION */}
-                          <td style={{ padding:"12px 14px", fontFamily:"'Space Mono',monospace", fontSize:11, color:"#aaa", whiteSpace:"nowrap" }}>{job.location||"—"}</td>
+                          <td style={{ padding:"12px 14px", fontFamily:"'Space Mono',monospace", fontSize:11, color:C.muted, whiteSpace:"nowrap" }}>{job.location||"—"}</td>
 
                           {/* BRIEF INTRO */}
                           <td style={{ padding:"12px 14px", maxWidth:240 }}>
                             <div style={{
-                              fontFamily:"'Space Mono',monospace", fontSize:10, color:"#bbb",
+                              fontFamily:"'Space Mono',monospace", fontSize:10, color:C.muted,
                               lineHeight:1.6, display:"-webkit-box", WebkitLineClamp:3,
                               WebkitBoxOrient:"vertical", overflow:"hidden",
                             }}>{job.intro||"—"}</div>
@@ -536,7 +549,7 @@ export default function Home() {
                                 }}>{t}</span>
                               ))}
                               {(job.techStack||[]).length>6 && (
-                                <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:"#aaa" }}>+{job.techStack.length-6}</span>
+                                <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>+{job.techStack.length-6}</span>
                               )}
                             </div>
                           </td>
@@ -547,7 +560,7 @@ export default function Home() {
                               style={{
                                 background:"transparent", border:`1.5px solid ${C.border}`,
                                 borderRadius:4, width:26, height:26, cursor:"pointer",
-                                fontFamily:"'Space Mono',monospace", fontSize:12, color:"#555",
+                                fontFamily:"'Space Mono',monospace", fontSize:12, color:C.muted,
                                 transition:"all .12s", display:"flex", alignItems:"center", justifyContent:"center",
                               }}
                               onMouseEnter={e=>{ e.currentTarget.style.color=C.red; e.currentTarget.style.borderColor=C.red; e.currentTarget.style.background=`${C.red}12`; }}
@@ -567,16 +580,16 @@ export default function Home() {
                                 animation:"slideUp .2s ease",
                               }}>
                                 <div>
-                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:"#aaa", marginBottom:6 }}>▸ RÉSUMÉ DU POSTE</div>
-                                  <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:"#bbb" }}>{job.intro}</div>
+                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:6 }}>▸ RÉSUMÉ DU POSTE</div>
+                                  <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:C.muted }}>{job.intro}</div>
                                 </div>
                                 <div>
-                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:"#aaa", marginBottom:6 }}>▸ POURQUOI CE SCORE ?</div>
-                                  <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:"#bbb" }}>{job.fitReason}</div>
+                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:6 }}>▸ POURQUOI CE SCORE ?</div>
+                                  <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:C.muted }}>{job.fitReason}</div>
                                 </div>
                                 {job.techStack?.length>0 && (
                                   <div style={{ gridColumn:"1/-1" }}>
-                                    <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:"#aaa", marginBottom:8 }}>▸ STACK COMPLÈTE</div>
+                                    <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:8 }}>▸ STACK COMPLÈTE</div>
                                     <div style={{ display:"flex", flexWrap:"wrap", gap:5 }}>
                                       {job.techStack.map((t,i)=>(
                                         <span key={i} style={{
@@ -605,7 +618,7 @@ export default function Home() {
         <div style={{
           textAlign:"center", marginTop:40,
           fontFamily:"'Space Mono',monospace", fontSize:10,
-          color:"#bbb", letterSpacing:2,
+          color:C.muted, letterSpacing:2,
           display:"flex", alignItems:"center", justifyContent:"center", gap:12,
         }}>
           <Star size={14} color={C.yellow} />
