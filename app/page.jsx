@@ -287,7 +287,7 @@ export default function Home() {
                 fontSize:"clamp(52px,8vw,88px)",
                 letterSpacing:"-0.02em",
                 lineHeight:0.95,
-                color:C.cream,
+                color:C.auraCore,
               }}>
                 NAIL<span style={{ WebkitTextStroke:`3px rgba(255,255,255,0.3)`, color:C.auraCore }}> IT</span>
                 <span style={{
