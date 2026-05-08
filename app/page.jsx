@@ -283,6 +283,7 @@ export default function Home() {
                 letterSpacing:"-0.02em",
                 lineHeight:0.95,
                 color:C.auraCore,
+                textShadow:`-2px -2px 0 ${C.auraOuter}, 2px -2px 0 ${C.auraOuter}, -2px 2px 0 ${C.auraOuter}, 2px 2px 0 ${C.auraOuter}, -2px 0 0 ${C.auraOuter}, 2px 0 0 ${C.auraOuter}, 0 -2px 0 ${C.auraOuter}, 0 2px 0 ${C.auraOuter}`,
               }}>
                 NAIL<span style={{ color:C.auraCore }}> IT</span>
                 <span style={{
