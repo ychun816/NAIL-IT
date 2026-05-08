@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Nail It — Alternance Analyzer",
+  title: "Nail It — Job Compatiability Analyzer",
   description: "AI-powered job analyzer for stage alternance in France",
   icons: { icon: "/favicon.ico" },
 };

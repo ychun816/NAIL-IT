@@ -24,9 +24,10 @@ const C = {
 };
 
 /* ─── constants ───────────────────────────────── */
-const CAT_ORDER = ["cloud_devops","backend","fullstack","frontend","other"];
+const CAT_ORDER = ["cloud","devops","backend","fullstack","frontend","other"];
 const CAT_META = {
-  cloud_devops: { label:"☁ Cloud / DevOps", color: C.blue,   bg:"#5BC8F520" },
+  cloud: { label:"☁ Cloud", color: C.blue,   bg:"#5BC8F520" },
+  devops: { label:"☁ DevOps", color: C.blue,   bg:"#5BC8F520" },
   backend:      { label:"⚙ Backend",         color: C.green,  bg:"#BAFF2920" },
   fullstack:    { label:"◈ Fullstack",        color: C.purple, bg:"#C084FC20" },
   frontend:     { label:"✦ Frontend",         color: C.pink,   bg:"#FF6B9D20" },
@@ -55,18 +56,18 @@ const Star = ({ size=40, color=C.yellow, style={} }) => (
   </svg>
 );
 
-const Blob = ({ style={} }) => (
-  <div style={{
-    position:"absolute",
-    borderRadius:"60% 40% 70% 30% / 50% 60% 40% 50%",
-    background: "radial-gradient(circle, #FDE4C9 0%, #F7A376 50%, #F0949F 100%)",
-    opacity: 0.45,
-    filter: "blur(40px)",
-    animation: "blobFloat 8s ease-in-out infinite",
-    pointerEvents: "none",
-    ...style,
-  }} />
-);
+// const Blob = ({ style={} }) => (
+//   <div style={{
+//     position:"absolute",
+//     borderRadius:"60% 40% 70% 30% / 50% 60% 40% 50%",
+//     background: "radial-gradient(circle, #FDE4C9 0%, #F7A376 50%, #F0949F 100%)",
+//     opacity: 0.45,
+//     filter: "blur(40px)",
+//     animation: "blobFloat 8s ease-in-out infinite",
+//     pointerEvents: "none",
+//     ...style,
+//   }} />
+// );
 
 /* ─── Panel (cut-paper card) ──────────────────── */
 const Panel = ({ children, accent=C.cream, style={} }) => (
@@ -340,7 +341,7 @@ export default function Home() {
                 <span style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:C.muted }}>{n}</span>
                 <input
                   value={val} onChange={e=>set(e.target.value)} disabled={loading}
-                  placeholder="e.g. DevOps"
+                  placeholder="e.g. ur job preference"
                   style={{
                     fontFamily:"'Space Mono',monospace", fontSize:11, width:110,
                     background:"transparent", border:`1.5px solid ${C.black}40`,
