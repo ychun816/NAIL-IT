@@ -1,4 +1,4 @@
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 const SYSTEM_PROMPT = `You are a career advisor analyzing job listings for a frontend/cloud engineering student seeking a stage alternance in France.
 
