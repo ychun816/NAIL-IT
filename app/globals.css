@@ -29,7 +29,7 @@
 html, body { height: 100%; }
 
 body {
-  background: radial-gradient(ellipse at 50% 30%, #5C85F5 0%, #4A72E4 45%, #3D60C2 100%);
+  background: radial-gradient(ellipse at 50% 30%, rgba(255, 192, 203, 0.1), rgba(255, 192, 203, 0.08)), radial-gradient(ellipse at 50% 30%, #5C85F5 0%, #4A72E4 45%, #3D60C2 100%);
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: 'Space Mono', monospace;
