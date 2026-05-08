@@ -237,11 +237,6 @@ export default function Home() {
   return (
     <div style={{ minHeight:"100vh", position:"relative", zIndex:1 }}>
 
-      {/* background blobs */}
-      <Blob style={{ width:560, height:420, top:-120, left:-160 }} />
-      <Blob style={{ width:440, height:380, top:"35%", right:-120, animationDelay:"3s" }} />
-      <Blob style={{ width:380, height:320, bottom:80, left:"15%", animationDelay:"5.5s" }} />
-
       {/* ── MARQUEE ─────────────────────────────── */}
       <div style={{
         background:"#1A2060", overflow:"hidden", whiteSpace:"nowrap",
