@@ -48,13 +48,13 @@ export async function POST(req) {
       },
     ],
     generationConfig: {
-      maxOutputTokens: 1000,
-      temperature: 0.7,
+      maxOutputTokens: 200,
+      temperature: 0.0,
     },
   };
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${key}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
