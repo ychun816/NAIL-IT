@@ -464,10 +464,10 @@ export default function Home() {
                   <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, fontWeight:700 }}>JOB LINK</span>
                   <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>up to 20 URLs · must start with http:// or https://</span>
                 </div>
-                <div style={{ display:"flex", gap:8 }}>
-                  <div style={{ width:40, paddingTop:8, paddingLeft:6, paddingRight:6, textAlign:"right", color:C.black, fontFamily:"'Space Mono',monospace", fontSize:12 }}>
+                <div style={{ display:"flex", gap:8, width:"100%", background:"transparent", border:`1.5px solid ${C.black}40`, borderRadius:4, padding:"8px 10px", alignItems:"flex-start" }}>
+                  <div style={{ width:40, paddingTop:4, paddingLeft:6, paddingRight:6, textAlign:"right", color:C.muted, fontFamily:"'Space Mono',monospace", fontSize:12 }}>
                     {Array.from({ length: numbersCount }).map((_,i) => (
-                      <div key={i} style={{ height:24, lineHeight:"24px", color: i < linkLines.length ? C.black : "rgba(255,255,255,0.35)", userSelect:"none" }}>{i+1}.</div>
+                      <div key={i} style={{ height:24, lineHeight:"24px", color: i < linkLines.length && linkLines[i].trim() ? C.blue : "rgba(255,255,255,0.35)", userSelect:"none" }}>{i+1}.</div>
                     ))}
                   </div>
                   <textarea
@@ -480,11 +480,11 @@ export default function Home() {
                     rows={4}
                     placeholder={"https://example.com/job-1\nhttps://example.com/job-2"}
                     style={{
-                      width:"100%", resize:"vertical",
-                      background:"transparent", border:`1.5px solid ${C.black}40`,
-                      borderRadius:4, padding:"8px 12px", outline:"none",
+                      flex:1, resize:"vertical",
+                      background:"transparent", border:"none",
+                      padding:0, margin:0, outline:"none",
                       fontFamily:"'Space Mono',monospace", fontSize:12,
-                      color:C.blue, caretColor:C.pink, lineHeight:1.8,
+                      color:C.blue, caretColor:C.pink, lineHeight:"24px",
                     }}
                   />
                 </div>
@@ -567,7 +567,7 @@ export default function Home() {
         {/* ── TABLE ─────────────────────────────── */}
         <Panel accent={C.auraMid}>
           <PanelHeader bg="#1A2060" color={C.auraCore}>
-            COMPATIBILITY ANALYSIS — {sorted.length}
+            THE ✶ FIT CHECK — {sorted.length}
             <Star size={16} color={C.auraCore} style={{ marginLeft:"auto" }} />
           </PanelHeader>
 
