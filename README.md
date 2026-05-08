@@ -56,3 +56,15 @@ npm run dev
 - Click any row to expand details (intro + fit reason + full stack)
 - Persistent storage via localStorage
 - Risograph / collage design — baby blue · hot pink · neon green · vintage black
+
+---
+
+## test erros 
+
+### test if gemini ai is working
+```
+cd '/Users/chun/👺CODE/NAIL-IT' && curl -s -X POST http://localhost:3000/api/analyze -H 'Content-Type: application/json' -d '{"input":"test job desc","isUrl":false,"preferences":[]}'
+
+# When the key was missing or wrong, this command returned:
+# {"error":"GEMINI_API_KEY missing","status":500}
+```
