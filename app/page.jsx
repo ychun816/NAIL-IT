@@ -330,10 +330,10 @@ export default function Home() {
         <div style={{ display:"inline-flex", animation:"marquee 12s linear infinite" }}>
           {[...Array(2)].map((_,k) => (
             <span key={k} style={{
-              fontFamily:"'Bebas Neue',sans-serif", letterSpacing:4,
+              fontFamily:"'Bebas Neue',sans-serif", letterSpacing:5,
               fontSize:13, padding:"7px 0", color:C.cream,
             }}>
-              &nbsp;&nbsp;★&nbsp; STAGE &nbsp;·&nbsp; ALTERNANCE &nbsp;·&nbsp; INTERNSHIP &nbsp;·&nbsp; BONNE CHANCE &nbsp;·&nbsp; CAREERS &nbsp;·&nbsp; CLOUD &nbsp;·&nbsp; DEVOPS &nbsp;·&nbsp; BACKEND &nbsp;·&nbsp; FRONTEND &nbsp;·&nbsp; FULLSTACK &nbsp;·&nbsp; APPLY &nbsp;·&nbsp; DATA &nbsp;·&nbsp; AI &nbsp;·&nbsp; GROWTH&nbsp;&nbsp;
+              &nbsp;&nbsp; ★ &nbsp; STAGE &nbsp; ★ &nbsp; ALTERNANCE &nbsp; ❤︎ &nbsp; INTERNSHIP &nbsp; ✦ &nbsp; BONNE CHANCE &nbsp; ❤︎ &nbsp; CAREERS &nbsp; ✦ &nbsp; CHARBONER MÊME SI TU AS LA FLEMME ★ &nbsp;·&nbsp; 
             </span>
           ))}
         </div>
