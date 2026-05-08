@@ -406,7 +406,7 @@ export default function Home() {
         {/* ── INPUT ─────────────────────────────── */}
         <Panel accent={C.auraOuter} style={{ marginBottom:20 }}>
           <PanelHeader bg="#1A2060" color={C.auraCore}>
-            <span>📡</span> START ANALYSE
+            <span></span> Vazy! START ANALYSE
           </PanelHeader>
 
           {/* preference */}
