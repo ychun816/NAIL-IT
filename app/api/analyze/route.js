@@ -24,8 +24,8 @@ Return ONLY a valid JSON object — absolutely no markdown, no prose, raw JSON o
 }`;
 
 export async function POST(req) {
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) return Response.json({ error: "ANTHROPIC_API_KEY missing" }, { status: 500 });
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) return Response.json({ error: "GEMINI_API_KEY missing" }, { status: 500 });
 
   const { input, isUrl, preferences } = await req.json();
   if (!input) return Response.json({ error: "No input provided" }, { status: 400 });
@@ -38,31 +38,32 @@ export async function POST(req) {
     ? `Analyze this job posting URL: ${input}${prefsLine}`
     : `Analyze this job description:\n\n${input}${prefsLine}`;
 
-  const tryFetch = async (withSearch) => {
-    const body = {
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userMsg }],
-      ...(withSearch ? { tools: [{ type: "web_search_20250305", name: "web_search" }] } : {}),
-    };
-    return fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-        ...(withSearch ? { "anthropic-beta": "web-search-2025-03-05" } : {}),
+  const fullPrompt = `${SYSTEM_PROMPT}\n\n${userMsg}`;
+
+  const body = {
+    contents: [
+      {
+        role: "user",
+        parts: [{ text: fullPrompt }],
       },
-      body: JSON.stringify(body),
-    });
+    ],
+    generationConfig: {
+      maxOutputTokens: 1000,
+      temperature: 0.7,
+    },
   };
 
-  let res = await tryFetch(isUrl);
-  if (!res.ok) res = await tryFetch(false);
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }
+  );
 
   const data = await res.json();
-  const text = (data.content ?? []).filter(b => b.type === "text").map(b => b.text).join("\n");
+  const text = (data.candidates?.[0]?.content?.parts ?? []).map(p => p.text).join("\n");
   const clean = text.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim();
   const m = clean.match(/\{[\s\S]*\}/);
   if (!m) return Response.json({ error: "No JSON returned", raw: text }, { status: 500 });

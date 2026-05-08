@@ -291,6 +291,7 @@ export default function Home() {
                   fontSize:"clamp(16px,2.2vw,26px)", color:C.auraOuter,
                   letterSpacing:"-0.02em", lineHeight:0.95,
                   fontWeight:700, fontStyle:"italic", marginTop:6,
+                  textShadow:"none",
                 }}>alternance analyzer ✦</span>
               </h1>
             </div>
