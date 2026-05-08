@@ -212,7 +212,7 @@ export default function Home() {
           body: JSON.stringify({ input: entries[i], isUrl: isURL(entries[i]), preferences: prefs }),
         });
         const d = await r.json();
-        if (d.error) throw new Error(d.error);
+        if (d.error) throw new Error(d.details ? `${d.error}: ${d.details}` : d.error);
         fresh.push({ ...d, id: Date.now() + Math.random(), sourceInput: entries[i],
           isUrl: isURL(entries[i]), analyzedAt: new Date().toLocaleDateString("fr-FR") });
         setLastResult(d);
