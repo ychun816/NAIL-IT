@@ -293,8 +293,8 @@ export default function Home() {
       const now = new Date();
       setParisTime(now.toLocaleString("fr-FR", {
         timeZone: "Europe/Paris",
-        weekday: "short", day: "2-digit", month: "short",
-        hour: "2-digit", minute: "2-digit", second: "2-digit",
+        weekday: "long", day: "2-digit", month: "short",
+        hour: "2-digit", minute: "2-digit",
         hour12: false,
       }).toUpperCase());
     };
