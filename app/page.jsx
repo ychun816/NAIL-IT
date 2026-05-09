@@ -6,17 +6,20 @@ const translations = {
   EN: {
     alternance: "Alternance Internship · France 2026",
     analyzer: "job compatibility analyzer ✦",
+    panel_title: "LET'S START ANALYZING",
     preference: "PREFERENCE",
+    pref_placeholder: "e.g. DevOps",
     job_link: "JOB LINK",
     link_hint: "up to 20 URLs · must start with http:// or https://",
     job_description: "JOB DESCRIPTION",
-    desc_placeholder: "Paste job description here...",
+    desc_placeholder: "> Paste job description here...",
     analyzing: "⟳ analyzing...",
     lets_check: "LET'S CHECK!",
     clear: "✕ Clear",
+    clear_confirm: "Sure you wanna clear everything?",
     no_data: "NO DATA",
     no_results: "NO RESULTS",
-    paste_links: "paste links / job descriptions and click ANALYZE",
+    paste_links: "paste links / job descriptions and click LET'S CHECK",
     modify_filters: "modify filters",
     job_summary: "JOB SUMMARY",
     why_score: "WHY THIS SCORE?",
@@ -24,21 +27,30 @@ const translations = {
     analyzed: "ANALYZED",
     to_apply: "TO APPLY",
     applied_today: "APPLIED TODAY!",
+    col_title: "JOB TITLE",
+    col_compat: "COMPATIBILITY",
+    col_salary: "SALARY",
+    col_location: "LOCATION",
+    col_intro: "BRIEF INTRO",
+    col_stack: "REQUIRED TECH STACK",
   },
   FR: {
     alternance: "Alternance Stage · France 2026",
     analyzer: "analyseur de compatibilité ✦",
+    panel_title: "VAZY! START ANALYSE",
     preference: "PRÉFÉRENCE",
+    pref_placeholder: "ex. DevOps",
     job_link: "LIEN D'EMPLOI",
     link_hint: "jusqu'à 20 URLs · doit commencer par http:// ou https://",
     job_description: "DESCRIPTION DU POSTE",
-    desc_placeholder: "Collez la description du poste ici...",
+    desc_placeholder: "> Collez la description du poste ici...",
     analyzing: "⟳ analyse en cours...",
     lets_check: "VÉRIFIONS!",
     clear: "✕ Supprimer",
+    clear_confirm: "Tout supprimer ?",
     no_data: "PAS DE DONNÉES",
     no_results: "AUCUN RÉSULTAT",
-    paste_links: "collez des liens / descriptions et cliquez ANALYSER",
+    paste_links: "collez des liens / descriptions et cliquez VÉRIFIONS",
     modify_filters: "modifiez les filtres",
     job_summary: "RÉSUMÉ DU POSTE",
     why_score: "POURQUOI CE SCORE ?",
@@ -46,21 +58,30 @@ const translations = {
     analyzed: "ANALYSÉ",
     to_apply: "À POSTULER",
     applied_today: "✓ APPLIQUÉ AUJOURD'HUI!",
+    col_title: "TITRE DU POSTE",
+    col_compat: "COMPATIBILITÉ",
+    col_salary: "SALAIRE",
+    col_location: "LIEU",
+    col_intro: "RÉSUMÉ",
+    col_stack: "STACK REQUISE",
   },
   CH: {
     alternance: "實習計劃 · 法國 2026",
     analyzer: "職位兼容性分析器 ✦",
+    panel_title: "開始分析",
     preference: "偏好",
+    pref_placeholder: "例: DevOps",
     job_link: "職位連結",
     link_hint: "最多20個URL · 必須以http://或https://開頭",
     job_description: "職位描述",
-    desc_placeholder: "貼上職位描述...",
+    desc_placeholder: "> 貼上職位描述...",
     analyzing: "⟳ 分析中...",
-    lets_check: "檢查!",
+    lets_check: "開始檢查!",
     clear: "✕ 清除",
+    clear_confirm: "確定清除全部？",
     no_data: "無數據",
     no_results: "無結果",
-    paste_links: "貼上連結/描述並點擊分析",
+    paste_links: "貼上連結/描述並點擊開始檢查",
     modify_filters: "修改篩選條件",
     job_summary: "職位概要",
     why_score: "為什麼這個分數?",
@@ -68,6 +89,12 @@ const translations = {
     analyzed: "已分析",
     to_apply: "待申請",
     applied_today: "✓ 今天已申請!",
+    col_title: "職位名稱",
+    col_compat: "相容性",
+    col_salary: "薪資",
+    col_location: "地點",
+    col_intro: "簡介",
+    col_stack: "所需技術棧",
   }
 };
 
@@ -257,6 +284,8 @@ export default function Home() {
   const [ready,      setReady]      = useState(false);
   const [inputType,  setInputType]  = useState("urls");
   const [parisTime,  setParisTime]  = useState("");
+  const [lang, setLang] = useState("FR");
+  const t = translations[lang];
 
   useEffect(() => {
     const tick = () => {
@@ -352,7 +381,7 @@ export default function Home() {
               fontFamily:"'Bebas Neue',sans-serif", letterSpacing:5,
               fontSize:13, padding:"7px 0", color:C.cream,
             }}>
-              &nbsp;&nbsp; ★ &nbsp; STAGE &nbsp; ★ &nbsp; ALTERNANCE &nbsp; ❤︎ &nbsp; INTERNSHIP &nbsp; ✦ &nbsp; BONNE CHANCE &nbsp; ❤︎ &nbsp; CAREERS &nbsp; ✦ &nbsp; CHARBONER MÊME SI TU AS LA FLEMME ★ &nbsp; 
+              &nbsp;&nbsp; ★ &nbsp; STAGE &nbsp; ★ &nbsp; ALTERNANCE &nbsp; ❤︎ &nbsp; INTERNSHIP &nbsp; ✦ &nbsp; BONNE CHANCE &nbsp; ❤︎ &nbsp; CAREERS &nbsp; ✦ &nbsp; CHARBONER MÊME SI TU AS LA FLEMME ★ &nbsp;
             </span>
           ))}
         </div>
@@ -372,7 +401,7 @@ export default function Home() {
               letterSpacing:"0.2em", color:C.auraMid, marginBottom:8,
               textTransform:"uppercase", fontStretch:"condensed", fontWeight:900,
             }}>
-              // Alternance Stage · France 2026
+              {t.alternance}
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:16 }}>
               <img
@@ -395,7 +424,7 @@ export default function Home() {
                   letterSpacing:"-0.02em", lineHeight:0.95,
                   fontWeight:700, fontStyle:"italic", marginTop:6,
                   textShadow:"none",
-                }}>job compatiability analyzer ✦</span>
+                }}>{t.analyzer}</span>
               </h1>
             </div>
           </div>
@@ -414,11 +443,26 @@ export default function Home() {
               PARIS · {parisTime}
             </div>
           )}
+          <div style={{ display:"flex", gap:6, justifyContent:"flex-end" }}>
+            {["EN","FR","CH"].map(l => (
+              <button key={l} onClick={() => setLang(l)} style={{
+                fontFamily:"'Bebas Neue',sans-serif",
+                fontSize:12, letterSpacing:"0.12em",
+                padding:"2px 8px",
+                border:`1.5px solid ${lang===l ? C.auraCore : "rgba(255,255,255,0.25)"}`,
+                borderRadius:3,
+                background: lang===l ? "rgba(253,228,201,0.15)" : "transparent",
+                color: lang===l ? C.auraCore : "rgba(255,255,255,0.45)",
+                cursor:"pointer",
+                transition:"all .12s",
+              }}>{l}</button>
+            ))}
+          </div>
           <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
             {[
-              { val:jobs.length, label:"ANALYZED", color:C.blue },
-              { val:toApplyN,    label:"TO APPLY",  color:C.pink },
-              { val:appliedTodayN, label:"APPLIED TODAY!", color:C.green },
+              { val:jobs.length, label:t.analyzed, color:C.blue },
+              { val:toApplyN,    label:t.to_apply,  color:C.pink },
+              { val:appliedTodayN, label:t.applied_today, color:C.green },
             ].map(({ val, label, color }) => (
               <div key={label} style={{
                 background:"#1A2060", color:C.cream,
@@ -439,18 +483,18 @@ export default function Home() {
         {/* ── INPUT ─────────────────────────────── */}
         <Panel accent={C.auraOuter} style={{ marginBottom:20 }}>
           <PanelHeader bg="#1A2060" color={C.auraCore}>
-            <span></span> VAZY! ☞ START ANALYZE
+            <span></span> {t.panel_title}
           </PanelHeader>
 
           {/* preference */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
-            <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, flexShrink:0, fontWeight:700 }}>PREFERENCE</span>
+            <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, flexShrink:0, fontWeight:700 }}>{t.preference}</span>
             {[["1",pref1,setPref1],["2",pref2,setPref2],["3",pref3,setPref3]].map(([n,val,set])=>(
               <div key={n} style={{ display:"flex", alignItems:"center", gap:6 }}>
                 <span style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:C.muted }}>{n}</span>
                 <input
                   value={val} onChange={e=>set(e.target.value)} disabled={loading}
-                  placeholder="e.g. DevOps"
+                  placeholder={t.pref_placeholder}
                   style={{
                     fontFamily:"'Space Mono',monospace", fontSize:11, width:110,
                     background:"transparent", border:`1.5px solid ${C.black}40`,
@@ -473,7 +517,7 @@ export default function Home() {
                 textAlign: "left"
               }}
             >
-              JOB LINK
+              {t.job_link}
             </button>
             <button
               onClick={() => setInputType("desc")}
@@ -485,7 +529,7 @@ export default function Home() {
                 textAlign: "left"
               }}
             >
-              JOB DESCRIPTION
+              {t.job_description}
             </button>
           </div>
 
@@ -494,8 +538,8 @@ export default function Home() {
             {inputType === "urls" ? (
               <>
                 <div style={{ display:"flex", alignItems:"baseline", gap:10, marginBottom:6 }}>
-                  <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, fontWeight:700 }}>JOB LINK</span>
-                  <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>up to 20 URLs · must start with http:// or https://</span>
+                  <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, fontWeight:700 }}>{t.job_link}</span>
+                  <span style={{ fontFamily:"'Space Mono',monospace", fontSize:9, color:C.muted }}>{t.link_hint}</span>
                 </div>
                 <div style={{ display:"flex", gap:8, width:"100%", background:"transparent", border:`1.5px solid ${C.black}40`, borderRadius:4, padding:"8px 10px", alignItems:"flex-start" }}>
                   <div style={{ width:40, paddingTop:4, paddingLeft:6, paddingRight:6, textAlign:"right", color:C.muted, fontFamily:"'Space Mono',monospace", fontSize:12 }}>
@@ -524,11 +568,11 @@ export default function Home() {
               </>
             ) : (
               <>
-                <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, marginBottom:8, fontWeight:700 }}>JOB DESCRIPTION</div>
+                <div style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, marginBottom:8, fontWeight:700 }}>{t.job_description}</div>
                 <textarea
                   value={jobDesc} onChange={e=>setJobDesc(e.target.value)} disabled={loading}
                   rows={5}
-                  placeholder="> Paste job description here..."
+                  placeholder={t.desc_placeholder}
                   style={{
                     width:"100%", resize:"vertical",
                     background:"transparent", border:`1.5px solid ${C.black}40`,
@@ -543,17 +587,17 @@ export default function Home() {
 
           {loading && (
             <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, textAlign:"center", fontFamily:"'Space Mono',monospace", fontSize:12, color:C.green }}>
-              ⟳ analyzing...
+              {t.analyzing}
             </div>
           )}
 
           {/* actions */}
           <div style={{ padding:"12px 16px", display:"flex", alignItems:"center", justifyContent:"flex-end", gap:10, background:`${C.black}08` }}>
             {jobs.length>0 && (
-              <Btn color={C.pink} small onClick={()=>{ if(confirm("Sure you wanna clear everything?")) setJobs([]); }}>✕ Clear</Btn>
+              <Btn color={C.pink} small onClick={()=>{ if(confirm(t.clear_confirm)) setJobs([]); }}>{t.clear}</Btn>
             )}
             <Btn onClick={handleAnalyze} disabled={loading||(!jobLink.trim()&&!jobDesc.trim())}>
-              {loading ? `⟳ ${progress.done}/${progress.total}` : "LET'S CHECK!"}
+              {loading ? `⟳ ${progress.done}/${progress.total}` : t.lets_check}
             </Btn>
           </div>
 
@@ -611,10 +655,10 @@ export default function Home() {
                 animation:"wiggle 2s ease-in-out infinite",
                 display:"inline-block" }}>✦</div>
               <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:22, letterSpacing:3, color:C.muted }}>
-                {jobs.length===0 ? "NO DATA" : "NO RESULTS"}
+                {jobs.length===0 ? t.no_data : t.no_results}
               </div>
               <div style={{ fontFamily:"'Space Mono',monospace", fontSize:11, color:C.muted, marginTop:6 }}>
-                {jobs.length===0 ? "paste links / job descriptions and click ANALYZE" : "modify filters"}
+                {jobs.length===0 ? t.paste_links : t.modify_filters}
               </div>
             </div>
           ) : (
@@ -622,7 +666,7 @@ export default function Home() {
               <table style={{ width:"100%", borderCollapse:"collapse", minWidth:900 }}>
                 <thead>
                   <tr style={{ background:C.black }}>
-                    {["#", "JOB TITLE","COMPATIBILITY","SALARY","LOCATION","BRIEF INTRO","REQUIRED TECH STACK",""].map(h=>(
+                    {["#", t.col_title, t.col_compat, t.col_salary, t.col_location, t.col_intro, t.col_stack, ""].map(h=>(
                       <th key={h} style={{
                         padding:"10px 14px", textAlign:"left",
                         fontFamily:"'Stora',sans-serif", fontSize:12,
@@ -746,16 +790,16 @@ export default function Home() {
                                 animation:"slideUp .2s ease",
                               }}>
                                 <div>
-                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:6 }}>▸ JOB SUMMARY</div>
+                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:6 }}>▸ {t.job_summary}</div>
                                   <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:C.muted }}>{job.intro}</div>
                                 </div>
                                 <div>
-                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:6 }}>▸ WHY THIS SCORE?</div>
+                                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:6 }}>▸ {t.why_score}</div>
                                   <div style={{ fontFamily:"'Space Mono',monospace", fontSize:12, lineHeight:1.7, color:C.muted }}>{job.fitReason}</div>
                                 </div>
                                 {job.techStack?.length>0 && (
                                   <div style={{ gridColumn:"1/-1" }}>
-                                    <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:8 }}>▸ FULL TECH STACK</div>
+                                    <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:11, letterSpacing:3, color:C.muted, marginBottom:8 }}>▸ {t.full_stack}</div>
                                     <div style={{ display:"flex", flexWrap:"wrap", gap:5 }}>
                                       {job.techStack.map((t,i)=>(
                                         <span key={i} style={{
