@@ -1,45 +1,82 @@
-# JobMatch Y2K — Alternance Analyzer
+# NAIL-IT — AI Job Analyzer for Alternance Hunters
 
-AI-powered job analyzer for stage alternance hunting in France.
-Paste job URLs or JDs → get a full fit score table, sorted by Cloud/DevOps → Backend → Fullstack.
-
-## Stack
-- Next.js 14 (App Router)
-- Claude Sonnet via Anthropic API (server-side Edge route)
-- Zero external dependencies beyond Next.js
+> Built by a foreigner navigating the French job market
+> For IT students drowning in job descriptions (Or students in other fields too!)
 
 ---
 
-## 🚀 Deploy to Vercel (3 steps)
+## Why This Exists
 
-### 1. Push to GitHub
-```bash
-git init
-git add .
-git commit -m "init jobmatch y2k"
-gh repo create jobmatch-y2k --public --push
+Hunting for an alternance/stage in France as a foreign IT student means reading through **dozens of job posts a day**, each with its own tech stack, vague requirements, and inconsistent formatting. It's exhausting to track which offers fit your profile, and even harder when you're still figuring out what "Bac+3 avec expérience en CI/CD" actually means in practice.
+
+**NAIL-IT** was built to:
+- Speed up the daily ritual of reading and evaluating job descriptions
+- Make tech stacks easy to parse at a glance — no more googling every acronym
+- Let you track and prioritize what to apply to, today
+
+---
+
+## Project Goals
+
+This project was also a learning sandbox:
+
+- Integrate a real AI service (Gemini via Google API) — learn basic API setup end-to-end
+- Get hands-on with a frontend stack: **React**, **Next.js** , **vercel** deployment
+- Explore **TypeScript** syntax in a real project context
+- Try out **Claude Code** as an AI-assisted development workflow
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | JavaScript (JSX) |
+| UI Library | React 18 |
+| AI / LLM | Gemini 1.5 Flash — Google Generative Language API (Edge route) |
+| Styling | Global CSS + custom `Stora` font |
+| Deployment | Vercel |
+| Storage | `localStorage` (no backend DB) |
+
+---
+
+## App Structure
+
+```
+NAIL-IT/
+├── app/
+│   ├── api/
+│   │   └── analyze/            ← Edge API route — sends JD to Gemini, returns structured JSON
+│   ├── globals.css             ← Aura-Grit design tokens + base styles
+│   ├── layout.jsx              ← Root layout + font loading
+│   ├── page.jsx                ← Main app page (input → table → detail panel)
+│   └── next.config.js
+├── public/
+│   ├── fonts/
+│   │   ├── Stora.otf
+│   │   └── Stora-Light.otf
+│   ├── red-pin.png
+│   └── red-pin-nobg.png
+├── package.json
+└── next.config.js
 ```
 
-### 2. Import on Vercel
-1. Go to [vercel.com/new](https://vercel.com/new)
-2. Import your GitHub repo
-3. Framework: **Next.js** (auto-detected)
-4. Click **Deploy** (it will fail — you need step 3)
-
-### 3. Add your API key
-1. In Vercel → your project → **Settings → Environment Variables**
-2. Add: `ANTHROPIC_API_KEY` = `sk-ant-...`
-3. Click **Save** then **Redeploy**
-
-Done ✦
-
 ---
 
-## 🛠 Local Development
+## Quickstart
+
+### Live App
+
+[https://wow-nail-it.vercel.app](https://wow-nail-it.vercel.app)
+
+### Local Dev
 
 ```bash
-cp .env.example .env.local
-# edit .env.local and add your ANTHROPIC_API_KEY
+git clone https://github.com/ychun816/NAIL-IT.git
+cd NAIL-IT
+# create .env.local and add your key:
+echo "GEMINI_API_KEY=AIza..." > .env.local
 
 npm install
 npm run dev
@@ -48,23 +85,11 @@ npm run dev
 
 ---
 
-## Features
-- Paste multiple job URLs or raw JDs (separated by `---`)
-- AI analysis: title, category, fit score 0-100, salary, location, tech stack
-- Auto-sorted: Cloud/DevOps → Backend → Fullstack → Frontend
-- Auto-tagged "TO APPLY" for Cloud/DevOps matches (toggleable)
-- Click any row to expand details (intro + fit reason + full stack)
-- Persistent storage via localStorage
-- Risograph / collage design — baby blue · hot pink · neon green · vintage black
+## How to Use
 
----
-
-## test erros 
-
-### test if gemini ai is working
-```
-cd '/Users/chun/👺CODE/NAIL-IT' && curl -s -X POST http://localhost:3000/api/analyze -H 'Content-Type: application/json' -d '{"input":"test job desc","isUrl":false,"preferences":[]}'
-
-# When the key was missing or wrong, this command returned:
-# {"error":"GEMINI_API_KEY missing","status":500}
-```
+- **Paste job descriptions** — drop raw JD text or job URLs into the input box, separated by `---`
+- **Hit Analyze** — Gemini reads each offer and returns structured data: title, category, fit score (0–100), salary, location, and tech stack
+- **Read the table** — results are auto-sorted by category: Cloud/DevOps → Backend → Fullstack → Frontend
+- **Expand a row** — click any offer to see the full breakdown: intro summary, why it fits (or doesn't), and the complete stack list
+- **Track applications** — offers flagged "TO APPLY" are auto-tagged for high-fit Cloud/DevOps roles; toggle manually as needed
+- **Persist across sessions** — your analyzed offers are saved in `localStorage`, so nothing is lost on refresh
