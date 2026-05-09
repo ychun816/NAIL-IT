@@ -43,7 +43,7 @@ Return ONLY a valid JSON object in ENGLISH — absolutely no markdown, no prose,
   "intro": "2-3 sentence summary in English of the role and why it matters for the student",
   "techStack": ["tech1","tech2","tech3"],
   "toApply": <true only if category is cloud_devops>,
-  "fitReason": "one sentence in English explaining the fit score"
+  "fitReason": "one sentence in English explaining the fit score — speak directly to the user using 'you' / 'your', not 'the user'"
 }`;
 
 export async function POST(req) {

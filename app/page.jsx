@@ -636,12 +636,13 @@ export default function Home() {
             <div style={{ display:"flex", alignItems:"center", gap:8, marginLeft:8, flexShrink:0 }}>
               <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, fontWeight:900 }}>SORT</span>
               <Tag onClick={()=>setSortBy(s => s==="fit" ? "time" : "fit")}
-                bg={C.paper}
-                color={C.cream}
-                style={{ display:"flex", alignItems:"center", gap:0, padding:"4px 12px" }}>
-                <span style={{ opacity: sortBy==="time" ? 1 : 0.35, fontWeight: sortBy==="time" ? 700 : 400 }}>TIME↓</span>
-                <span style={{ opacity:0.35, margin:"0 6px" }}>/</span>
-                <span style={{ opacity: sortBy==="fit" ? 1 : 0.35, fontWeight: sortBy==="fit" ? 700 : 400, color: sortBy==="fit" ? C.yellow : C.cream }}>FIT</span>
+                bg={sortBy==="fit" ? C.yellow : C.paper}
+                color={sortBy==="fit" ? C.black : C.cream}
+                style={{ display:"inline-flex", alignItems:"center", gap:5 }}>
+                {sortBy==="fit"
+                  ? "FIT ↓"
+                  : <><span>TIME ↓</span><span style={{opacity:0.35, fontSize:9}}>· FIT</span></>
+                }
               </Tag>
             </div>
           </div>
