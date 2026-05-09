@@ -67,7 +67,7 @@ const translations = {
   },
   CH: {
     alternance: "實習計劃 · 法國 2026",
-    analyzer: "職位兼容性分析器 ✦",
+    analyzer: "職位適配度分析 ✦",
     panel_title: "來！ ☞ 開始分析",
     preference: "偏好",
     pref_placeholder: "例: DevOps",
