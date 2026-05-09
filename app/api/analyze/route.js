@@ -52,8 +52,8 @@ export async function POST(req) {
   if (!input) return Response.json({ error: "No input provided" }, { status: 400 });
 
   const prefsLine = preferences?.length
-    ? `\n\nCandidate preferences (primary matching keywords): ${preferences.join(", ")}`
-    : "";
+    ? `\n\nMODE A — score against these preferences only (ignore default tech profile): ${preferences.join(", ")}`
+    : `\n\nMODE B — no preferences, use the default tech profile.`;
 
   const userMsg = isUrl
     ? `Analyze this job posting URL: ${input}${prefsLine}`
