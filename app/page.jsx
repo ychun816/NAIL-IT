@@ -120,7 +120,7 @@ export default function Home() {
               fontFamily:"'Bebas Neue',sans-serif", letterSpacing:5,
               fontSize:13, padding:"7px 0", color:C.cream,
             }}>
-              &nbsp;&nbsp; ★ &nbsp; STAGE &nbsp; ★ &nbsp; ALTERNANCE &nbsp; ❤︎ &nbsp; INTERNSHIP &nbsp; ✦ &nbsp; BONNE CHANCE &nbsp; ❤︎ &nbsp; CAREERS &nbsp; ✦ &nbsp; CHARBONER MÊME SI TU AS LA FLEMME ★ &nbsp;
+              &nbsp;&nbsp; ★ &nbsp; STAGE &nbsp; ★ &nbsp; ALTERNANCE &nbsp; ❤︎ &nbsp; INTERNSHIP &nbsp; ✦ &nbsp; BONNE CHANCE &nbsp; ❤︎ &nbsp; CAREERS &nbsp; ✦ &nbsp; CHARBONNE MÊME SI T'AS LA FLEMME ★ &nbsp;
             </span>
           ))}
         </div>
