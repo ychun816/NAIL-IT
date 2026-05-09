@@ -394,7 +394,7 @@ export default function Home() {
         <header style={{ padding:"40px 0 32px", display:"flex", alignItems:"flex-end", justifyContent:"space-between", gap:24, flexWrap:"wrap", position:"relative" }}>
           <div>
             {/* decorative stars */}
-            <Star size={28} color={C.yellow} style={{ position:"absolute", top:-8, left:-12, transform:"rotate(15deg)" }} />
+            <Star size={28} color={C.yellow} style={{ position:"absolute", top:18, left:-12, transform:"rotate(15deg)" }} />
             <Star size={18} color={C.pink}   style={{ position:"absolute", top:20, left:220, transform:"rotate(-10deg)" }} />
 
             <div style={{
