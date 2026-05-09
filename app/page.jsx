@@ -636,8 +636,15 @@ export default function Home() {
             <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, marginLeft:8, fontWeight:900 }}>SORT</span>
             <Tag onClick={()=>setSortBy(s => s==="fit" ? "time" : "fit")}
               bg={sortBy==="fit" ? C.yellow : C.paper}
-              color={sortBy==="fit" ? C.black : C.cream}>
-              {sortBy==="fit" ? "FIT ↓" : "TIME ↓"}
+              color={sortBy==="fit" ? C.black : C.cream}
+              style={{ display:"flex", alignItems:"center", gap:6 }}>
+              {sortBy==="fit" ? "FIT ↓" : (
+                <>
+                  <span>TIME ↓</span>
+                  <span style={{ opacity:0.4, fontSize:9 }}>›</span>
+                  <span style={{ opacity:0.4, fontSize:9, letterSpacing:1 }}>FIT?</span>
+                </>
+              )}
             </Tag>
           </div>
         )}
