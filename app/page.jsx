@@ -638,7 +638,7 @@ export default function Home() {
               ))}
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:8, flexShrink:0 }}>
-              <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, fontWeight:900 }}>SORT</span>
+              {/* <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, fontWeight:900 }}>SORT</span> */}
               <Tag onClick={()=>setSortBy(s => s==="fit" ? "time" : "fit")}
                 bg={C.yellow} color={C.black}
                 style={{ display:"inline-flex", alignItems:"center", gap:6 }}>
