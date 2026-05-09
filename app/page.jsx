@@ -622,18 +622,20 @@ export default function Home() {
 
         {/* ── FILTERS ───────────────────────────── */}
         {jobs.length>0 && (
-          <div style={{ display:"flex", flexWrap:"wrap", gap:8, alignItems:"center", marginBottom:16 }}>
-            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, fontWeight:900 }}>FILTER</span>
-            {[
-              { key:"all",      label:"ALL",          bg:C.cream },
-              { key:"to_apply", label:"★ TO APPLY",   bg:C.yellow },
-              { key:"just_applied", label:"✓ JUST APPLIED!", bg:C.blue },
-              ...CAT_ORDER.map(c=>({ key:c, label:CAT_META[c].label, bg:CAT_META[c].color })),
-            ].map(({ key, label, bg }) => (
-              <Tag key={key} onClick={()=>setFilter(key)} bg={filter===key?bg:C.paper}
-                color={filter===key?C.black:C.cream} style={{ opacity: filter===key?1:0.55 }}>{label}</Tag>
-            ))}
-            <div style={{ display:"flex", alignItems:"center", gap:8, marginLeft:8, flexShrink:0 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:16, minWidth:0 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:8, overflowX:"auto", flex:1, minWidth:0, scrollbarWidth:"none" }}>
+              <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, fontWeight:900, flexShrink:0 }}>FILTER</span>
+              {[
+                { key:"all",      label:"ALL",          bg:C.cream },
+                { key:"to_apply", label:"★ TO APPLY",   bg:C.yellow },
+                { key:"just_applied", label:"✓ JUST APPLIED!", bg:C.blue },
+                ...CAT_ORDER.map(c=>({ key:c, label:CAT_META[c].label, bg:CAT_META[c].color })),
+              ].map(({ key, label, bg }) => (
+                <Tag key={key} onClick={()=>setFilter(key)} bg={filter===key?bg:C.paper}
+                  color={filter===key?C.black:C.cream} style={{ opacity: filter===key?1:0.55, flexShrink:0 }}>{label}</Tag>
+              ))}
+            </div>
+            <div style={{ display:"flex", alignItems:"center", gap:8, flexShrink:0 }}>
               <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, fontWeight:900 }}>SORT</span>
               <Tag onClick={()=>setSortBy(s => s==="fit" ? "time" : "fit")}
                 bg={sortBy==="fit" ? C.yellow : C.paper}
