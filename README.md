@@ -29,15 +29,15 @@ This project was also a learning sandbox:
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 14 (App Router) |
-| Language | JavaScript (JSX) |
-| UI Library | React 18 |
-| AI / LLM | Gemini 1.5 Flash — Google Generative Language API (Edge route) |
-| Styling | Global CSS + custom `Stora` font |
-| Deployment | Vercel |
-| Storage | `localStorage` (no backend DB) |
+| Layer | Technology | Why |
+|---|---|---|
+| Framework | Next.js 14 (App Router) | File-based routing + built-in API routes — no separate backend needed |
+| Language | JavaScript (JSX) | Faster to iterate without type overhead for a small solo project |
+| UI Library | React 18 | Component model makes it easy to break UI into reusable pieces |
+| AI / LLM | Gemini 1.5 Flash — Google Generative Language API | Free tier available, fast inference, good structured JSON output |
+| Styling | Global CSS + custom `Stora` font | No framework overhead — full control, keeps the custom aesthetic |
+| Deployment | Vercel | Zero-config Next.js hosting, automatic deploys from GitHub |
+| Storage | `localStorage` (no backend DB) | No auth, no server cost — good enough for a personal daily tool |
 
 ---
 
@@ -47,16 +47,21 @@ This project was also a learning sandbox:
 NAIL-IT/
 ├── app/
 │   ├── api/
-│   │   └── analyze/            ← Edge API route — sends JD to Gemini, returns structured JSON
+│   │   └── analyze/
+│   │       └── route.js        ← Edge API route — sends JD to Gemini, returns structured JSON
+│   ├── components/
+│   │   ├── ui.jsx              ← Star, Panel, PanelHeader, Tag, Btn, FitMeter
+│   │   └── JobRow.jsx          ← Table row + expanded detail row
+│   ├── lib/
+│   │   ├── constants.js        ← Palette, category data, helpers
+│   │   └── translations.js     ← EN / FR / CH strings
 │   ├── globals.css             ← Aura-Grit design tokens + base styles
 │   ├── layout.jsx              ← Root layout + font loading
-│   ├── page.jsx                ← Main app page (input → table → detail panel)
-│   └── next.config.js
+│   └── page.jsx                ← State, effects, top-level layout
 ├── public/
 │   ├── fonts/
 │   │   ├── Stora.otf
 │   │   └── Stora-Light.otf
-│   ├── red-pin.png
 │   └── red-pin-nobg.png
 ├── package.json
 └── next.config.js
