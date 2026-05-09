@@ -1,11 +1,24 @@
-# NAIL-IT — AI Job Analyzer for Alternance Hunters
+# NAIL-IT — AI Job Analyzer for Stage / Alternance Hunters
 
 > Built by a foreigner navigating the French job market
 > For IT students drowning in job descriptions (Or students in other fields too!)
 
+<img width="892" height="798" alt="image" src="https://github.com/user-attachments/assets/8a221613-7e7a-414c-9b16-b78a12c0e600" />
+
+## Index
+- [Why Create This App](#WhyCreateThisApp)
+- [Project Goals](#ProjectGoals)
+- [Tech Stack](#)
+- [App Structure](#AppStructure)
+- [Quickstart](#Quickstart)
+  - [Live App](#LiveApp)
+  - [Local Dev](#LocalDev)
+- [How to Use](#HowtoUse)
+
+
 ---
 
-## Why This Exists
+## Why Create This App
 
 Hunting for an alternance/stage in France as a foreign IT student means reading through **dozens of job posts a day**, each with its own tech stack, vague requirements, and inconsistent formatting. It's exhausting to track which offers fit your profile, and even harder when you're still figuring out what "Bac+3 avec expérience en CI/CD" actually means in practice.
 
