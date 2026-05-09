@@ -23,12 +23,14 @@ Use the default profile below as the scoring criteria:
 - Jobs with no overlap with the above → fitScore 0, category "other"
 
 ## Category rules
-- cloud_devops: cloud, DevOps, infrastructure, CI/CD, containers
-- backend: server-side, APIs, databases, data engineering
+- cloud_devops: cloud, DevOps, infrastructure, CI/CD, containers, SRE
+- backend: server-side, APIs, databases, data engineering, data analyst, data analysis, business intelligence, BI, SQL, analytics, Tableau, Looker, Power BI, ETL, data warehouse
 - frontend: UI, web, React, Vue, Angular, CSS
-- ai: machine learning, LLM, NLP, computer vision, data science
+- ai: machine learning, LLM, NLP, computer vision, data science, deep learning, AI research
 - fullstack: both frontend and backend
 - other: anything else (marketing, communication, design, HR, finance, etc.) — can still have a high fitScore in MODE A if it matches preferences
+
+Note: "data analyst" and "business intelligence" roles belong to the "backend" category, NOT "ai" and NOT "other".
 
 Return ONLY a valid JSON object in ENGLISH — absolutely no markdown, no prose, raw JSON only:
 {
