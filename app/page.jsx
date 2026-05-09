@@ -640,9 +640,7 @@ export default function Home() {
               style={{ display:"flex", alignItems:"center", gap:6 }}>
               {sortBy==="fit" ? "FIT ↓" : (
                 <>
-                  <span>TIME ↓</span>
-                  <span style={{ opacity:0.4, fontSize:9 }}>›</span>
-                  <span style={{ opacity:0.4, fontSize:9, letterSpacing:1 }}>FIT?</span>
+                  <span>TIME↓ › FIT?</span>
                 </>
               )}
             </Tag>
