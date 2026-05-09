@@ -169,7 +169,8 @@ const Star = ({ size=40, color=C.yellow, style={} }) => (
 /* ─── Panel (cut-paper card) ──────────────────── */
 const Panel = ({ children, accent=C.cream, style={} }) => (
   <div style={{
-    background: C.paper,
+    background: "rgba(58,90,196,0.70)",
+    backdropFilter: "blur(2px)",
     border: `2px solid ${C.border}`,
     borderRadius: 8,
     boxShadow: `4px 4px 0 ${accent}`,
@@ -185,7 +186,7 @@ const Panel = ({ children, accent=C.cream, style={} }) => (
 /* ─── PanelHeader ─────────────────────────────── */
 const PanelHeader = ({ children, bg=C.black, color=C.cream }) => (
   <div style={{
-    background: bg,
+    background: bg === C.black ? "rgba(26,32,96,0.82)" : bg,
     color,
     fontFamily:"'Stora',sans-serif",
     fontSize: 15,
@@ -465,7 +466,8 @@ export default function Home() {
               { val:appliedTodayN, label:t.applied_today, color:C.green },
             ].map(({ val, label, color }) => (
               <div key={label} style={{
-                background:"#1A2060", color:C.cream,
+                background:"rgba(26,32,96,0.72)", color:C.cream,
+                backdropFilter:"blur(2px)",
                 border:`2px solid rgba(255,255,255,0.2)`,
                 borderRadius:6,
                 padding:"14px 22px",
