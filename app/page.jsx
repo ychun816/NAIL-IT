@@ -6,7 +6,7 @@ const translations = {
   EN: {
     alternance: "Alternance Internship · France 2026",
     analyzer: "job compatibility analyzer ✦",
-    panel_title: "LET'S START ANALYZING",
+    panel_title: "LET'S GO ☞ ANALYZE",
     preference: "PREFERENCE",
     pref_placeholder: "e.g. DevOps",
     job_link: "JOB LINK",
@@ -37,7 +37,7 @@ const translations = {
   FR: {
     alternance: "Alternance Stage · France 2026",
     analyzer: "analyseur de compatibilité ✦",
-    panel_title: "VAZY! START ANALYSE",
+    panel_title: "VAZY! ☞ START ANALYSE",
     preference: "PRÉFÉRENCE",
     pref_placeholder: "ex. DevOps",
     job_link: "LIEN D'EMPLOI",
@@ -68,7 +68,7 @@ const translations = {
   CH: {
     alternance: "實習計劃 · 法國 2026",
     analyzer: "職位兼容性分析器 ✦",
-    panel_title: "開始分析",
+    panel_title: "來！ ☞ 開始分析",
     preference: "偏好",
     pref_placeholder: "例: DevOps",
     job_link: "職位連結",
@@ -76,9 +76,9 @@ const translations = {
     job_description: "職位描述",
     desc_placeholder: "> 貼上職位描述...",
     analyzing: "⟳ 分析中...",
-    lets_check: "開始檢查!",
+    lets_check: "檢查開始！",
     clear: "✕ 清除",
-    clear_confirm: "確定清除全部？",
+    clear_confirm: "清除全部你要確？",
     no_data: "無數據",
     no_results: "無結果",
     paste_links: "貼上連結/描述並點擊開始檢查",
