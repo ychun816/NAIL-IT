@@ -623,7 +623,7 @@ export default function Home() {
         {/* ── FILTERS ───────────────────────────── */}
         {jobs.length>0 && (
           <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:16, minWidth:0 }}>
-            <div style={{ display:"flex", alignItems:"center", gap:8, overflowX:"auto", flex:1, minWidth:0, scrollbarWidth:"none" }}>
+            <div className="filter-scroll" style={{ display:"flex", alignItems:"center", gap:8, overflowX:"auto", flex:1, minWidth:0, paddingBottom:4 }}>
               <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:3, color:C.auraCore, fontWeight:900, flexShrink:0 }}>FILTER</span>
               {[
                 { key:"all",      label:"ALL",          bg:C.cream },

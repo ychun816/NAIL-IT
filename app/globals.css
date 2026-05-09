@@ -59,6 +59,26 @@ body::after {
   opacity: 0.18;
 }
 
+/* ── Filter scrollbar ── */
+.filter-scroll::-webkit-scrollbar {
+  height: 3px;
+}
+.filter-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.filter-scroll::-webkit-scrollbar-thumb {
+  background: var(--aura-mid);
+  border-radius: 99px;
+}
+.filter-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--aura-outer);
+}
+/* Firefox */
+.filter-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--aura-mid) transparent;
+}
+
 /* ── Keyframes ── */
 @keyframes marquee {
   0%   { transform: translateX(0); }
