@@ -22,7 +22,7 @@ This project was also a learning sandbox:
 
 - Integrate a real AI service (Gemini via Google API) — learn basic API setup end-to-end
 - Get hands-on with a frontend stack: **React**, **Next.js** , **vercel** deployment
-- Explore **TypeScript** syntax in a real project context
+- Get familiar **Javascriptt** syntax in a real project context
 - Try out **Claude Code** as an AI-assisted development workflow
 
 ---
@@ -93,3 +93,23 @@ npm run dev
 - **Expand a row** — click any offer to see the full breakdown: intro summary, why it fits (or doesn't), and the complete stack list
 - **Track applications** — offers flagged "TO APPLY" are auto-tagged for high-fit Cloud/DevOps roles; toggle manually as needed
 - **Persist across sessions** — your analyzed offers are saved in `localStorage`, so nothing is lost on refresh
+
+---
+
+## Other Notes 
+
+### Git — Revert to a Specific Commit
+
+```bash
+# See the commit history
+git log --oneline
+
+# Reset your local branch to a specific commit (replaces all files)
+git reset --hard <commit-hash>
+
+# Force push to update GitHub (overwrites remote history)
+git push --force
+```
+
+> Example: `git reset --hard b70316f && git push --force`
+> Warning: force push removes all commits after the target. Make sure you want to lose them.
