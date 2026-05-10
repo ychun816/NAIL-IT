@@ -3,17 +3,22 @@
 > Built by a foreigner navigating the French job market
 > For IT students drowning in job descriptions (Or students in other fields too!)
 
-<img width="892" height="798" alt="image" src="https://github.com/user-attachments/assets/8a221613-7e7a-414c-9b16-b78a12c0e600" />
+---
 
+<p align="center">
+  <img width="892" src="https://github.com/user-attachments/assets/8a221613-7e7a-414c-9b16-b78a12c0e600" alt="image" />
+</p>
+
+  
 ## Index
-- [Why Create This App](#WhyCreateThisApp)
-- [Project Goals](#ProjectGoals)
-- [Tech Stack](#)
-- [App Structure](#AppStructure)
-- [Quickstart](#Quickstart)
-  - [Live App](#LiveApp)
-  - [Local Dev](#LocalDev)
-- [How to Use](#HowtoUse)
+- [Why Create This App](#why-create-this-app)
+- [Project Goals](#project-goals)
+- [Tech Stack](#tech-stack)
+- [App Structure](#app-structure)
+- [Quickstart](#quickstart)
+  - [Live App](#live-app)
+  - [Local Dev](#local-dev)
+- [How to Use](#how-to-use)
 
 
 ---
