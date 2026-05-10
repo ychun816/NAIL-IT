@@ -226,6 +226,12 @@ export default function Home() {
             <span></span> {t.panel_title}
           </PanelHeader>
 
+          <div style={{ padding:"8px 18px", borderBottom:`1.5px solid ${C.black}20`, background:"#1A206015" }}>
+            <p style={{ margin:0, fontFamily:"'Space Mono',monospace", fontSize:10.5, color:C.muted, letterSpacing:0.5, lineHeight:1.7 }}>
+              {t.how_to}
+            </p>
+          </div>
+
           {/* preference */}
           <div style={{ padding:"12px 16px", borderBottom:`1.5px solid ${C.black}20`, display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
             <span style={{ fontFamily:"'Bricolage Grotesque',sans-serif", fontSize:12, letterSpacing:2, color:C.muted, flexShrink:0, fontWeight:700 }}>{t.preference}</span>
