@@ -65,7 +65,7 @@ export default function Home() {
         const r = await fetch("/api/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ input: entries[i], isUrl: isURL(entries[i]), preferences: prefs }),
+          body: JSON.stringify({ input: entries[i], isUrl: isURL(entries[i]), preferences: prefs, lang }),
         });
         const d = await r.json();
         if (d.error) throw new Error(d.details ? `${d.error}: ${d.details}` : d.error);
