@@ -51,16 +51,19 @@ export async function POST(req) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return Response.json({ error: "GEMINI_API_KEY missing" }, { status: 500 });
 
-  const { input, isUrl, preferences } = await req.json();
+  const { input, isUrl, preferences, lang } = await req.json();
   if (!input) return Response.json({ error: "No input provided" }, { status: 400 });
+
+  const langName = { FR: "French", CH: "Traditional Chinese", EN: "English" }[lang] ?? "English";
+  const langLine = `\n\nLANGUAGE: Write the title, intro, fitReason, and salary fields in ${langName}. Keep category, techStack entries, location, fitScore, and toApply unchanged.`;
 
   const prefsLine = preferences?.length
     ? `\n\nMODE A — score against these preferences only (ignore default tech profile): ${preferences.join(", ")}`
     : `\n\nMODE B — no preferences, use the default tech profile.`;
 
   const userMsg = isUrl
-    ? `Analyze this job posting URL: ${input}${prefsLine}`
-    : `Analyze this job description:\n\n${input}${prefsLine}`;
+    ? `Analyze this job posting URL: ${input}${prefsLine}${langLine}`
+    : `Analyze this job description:\n\n${input}${prefsLine}${langLine}`;
 
   const fullPrompt = `${SYSTEM_PROMPT}\n\n${userMsg}`;
 

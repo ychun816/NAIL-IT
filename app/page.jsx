@@ -87,7 +87,7 @@ export default function Home() {
       setJobLink("");
       setJobDesc("");
     }
-  }, [pref1, pref2, pref3, jobLink, jobDesc]);
+  }, [pref1, pref2, pref3, jobLink, jobDesc, lang, inputType]);
 
   const sorted = [...jobs]
     .filter(j => {
